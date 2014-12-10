@@ -1,8 +1,10 @@
 class Info {
   int hp;
+
   Info() {
     hp = 100;
   }
+
   void rule() {
     for (int i=0; i<notes.length; i++) {
       if (notes[i].ypos>=height) {
@@ -23,6 +25,7 @@ class Info {
       }
     }
   }
+
   void display() {
     fill(0, 255, 0);
     rect(600, 50, 20, 2*100);
@@ -38,3 +41,4 @@ boolean intersect(int x1, int y1, int x2, int y2, int r1, int r2) {
     return false;
   }
 }
+

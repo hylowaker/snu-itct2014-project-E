@@ -5,6 +5,7 @@ class Keyboard {
   int threshold;
   color c;
   boolean over;
+  
   Keyboard(int _x, int _y) {
     xpos = _x;
     ypos = _y;
@@ -13,6 +14,7 @@ class Keyboard {
     c = color(255);
     over = false;
   }
+  
   void display() {
     noStroke();
     fill(c);
