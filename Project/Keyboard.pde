@@ -25,6 +25,7 @@ class Keyboard {
   
   void display() {
     noStroke();
+    
     fill(c);
     
     // show white, circle-shape keys
@@ -33,6 +34,11 @@ class Keyboard {
     //#####debug line
     stroke(5);
     line(xpos, ypos, xpos + size/2, ypos + size/2);
+    
+    detectRed();
+  }
+
+  void detectRed() {
     
     over = false;
     
@@ -46,24 +52,16 @@ class Keyboard {
           stroke(2); ellipse(x, y, 1, 1); //#####debug
           
           // pick the color of the pixel
-          color c = cam.pixels[y*cam.width + x];
-          float redity = red(c) - 0.5*green(c)- 0.5*blue(c);
+          color pixC = cam.pixels[y*cam.width + x];
+          float redity = red(pixC) - 0.5*green(pixC)- 0.5*blue(pixC);
           
           // if the color of the pixel is red enough,
           if (redity > threshold) {
-            
-            // fill the key with red color
-            c = color(255, 0, 0);
-            fill(c);
-            ellipse(xpos+size/2, ypos+size/2, size, size);
-            
+                  
             // change state
             over = true;
-            
-            break;
-            
-          } else {
-            c = color(255);
+            c = color(255, 0, 0);
+            return;
           }
           
         }
@@ -71,9 +69,11 @@ class Keyboard {
       }
     }
     
+    c = color(255, 255, 255);
+    
   }
-
-  // return
+  
+  
   boolean intersect(int x1, int y1, int x2, int y2, int r) {
     if (dist(x1, y1, x2, y2) < r) {
       return true;
