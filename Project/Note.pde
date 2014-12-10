@@ -7,8 +7,10 @@ class Note {
   // lane of the note
   int k;
   
-  //
+  // time to show up
   int time;
+  
+  // constants
   int size;
   int speed;
 
@@ -21,19 +23,19 @@ class Note {
 
     switch(k) {
     case 1:
-      xpos = 50+10; 
+      xpos = 50 + 10; 
       ypos = 20;
       break;
     case 2:
-      xpos = 50+150+10; 
+      xpos = 50 + 150 + 10; 
       ypos = 20;
       break;
     case 3:
-      xpos = 50+300+10; 
+      xpos = 50 + 300 + 10; 
       ypos = 20;
       break;
     case 4:
-      xpos = 50+450+10; 
+      xpos = 50 + 450 + 10; 
       ypos = 20;
       break;
     default:
@@ -44,10 +46,10 @@ class Note {
   }
   
   void display() {
-    if (millis()>time) {
+    if (millis() > time) {
       fill(255, 0, 255);
-      ellipse(xpos+size/2, ypos+size/2, size, size);
-      ypos = ypos + speed;
+      ellipse(xpos + size/2, ypos + size/2, size, size);
+      ypos += speed;
     }
   }
 }

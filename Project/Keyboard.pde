@@ -5,13 +5,15 @@ class Keyboard {
   // coordinates of the keys
   int xpos;
   int ypos;
-  
-  int size;
-  int threshold;
+  // color to fill
   color c;
   
-  // over
+  // key state
   boolean over;
+  
+  // constants
+  int size;
+  int threshold;
   
   // constructor
   Keyboard(int _x, int _y) {
