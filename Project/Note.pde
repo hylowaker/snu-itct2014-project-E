@@ -1,11 +1,18 @@
 class Note {
+  
+  // coordinates of the note
   int xpos;
   int ypos;
+  
+  // lane of the note
   int k;
+  
+  //
   int time;
   int size;
   int speed;
 
+  // constructor
   Note(int _k, int _t) {
     k = _k;
     time = _t;
