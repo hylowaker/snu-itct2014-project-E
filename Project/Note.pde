@@ -51,7 +51,7 @@ class Note {
   }
   
   void display() {
-    if (millis() > time) {
+    if (millis() - song1.savedTime > time) {
       fill(255, 0, 255);
       ellipse(xpos, ypos, 2*radius, 2*radius);
       ypos += speed;
