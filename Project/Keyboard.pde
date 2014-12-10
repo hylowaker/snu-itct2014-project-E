@@ -6,36 +6,36 @@ class Keyboard {
   int xpos;
   int ypos;
   // color to fill
-  color c;
+  color fillColor;
   
   // key state
   boolean over;
   
   // constants
-  int size;
+  int radius;
   int threshold;
   
   // constructor
   Keyboard(int _x, int _y) {
     xpos = _x;
     ypos = _y;
-    size = 80;
+    radius = 40;
     threshold = 50;
-    c = color(255);
+    fillColor = color(255);
     over = false;
   }
   
   void display() {
     noStroke();
     
-    fill(c);
+    fill(fillColor);
     
     // show white, circle-shape keys
-    ellipse(xpos + size/2, ypos + size/2, size, size);
+    ellipse(xpos, ypos, 2*radius, 2*radius);
     
     //#####debug line
     stroke(5);
-    line(xpos, ypos, xpos + size/2, ypos + size/2);
+    line(xpos - radius, ypos - radius, xpos, ypos);
     
     detectRed();
   }
@@ -45,11 +45,11 @@ class Keyboard {
     over = false;
     
     // for (each pixel) in the keyboard,  // not looping for every pixel because of performance issue.
-    for (int x = xpos; x < xpos + size; x += 5) {
-      for (int y = ypos; y < ypos + size; y += 5) {
+    for (int x = xpos - radius; x < xpos + radius; x += 5) {
+      for (int y = ypos - radius; y < ypos + radius; y += 5) {
         
         // if the pixel is in the circle,
-        if (intersect(x, y, xpos + size/2, ypos + size/2, size/2)) {
+        if (intersect(x, y, xpos, ypos, radius)) {
           
           stroke(2); ellipse(x, y, 1, 1); //#####debug
           
@@ -62,7 +62,7 @@ class Keyboard {
                   
             // change state
             over = true;
-            c = color(255, 0, 0);
+            fillColor = color(255, 0, 0);
             return;
           }
           
@@ -71,7 +71,7 @@ class Keyboard {
       }
     }
     
-    c = color(255, 255, 255);
+    fillColor = color(255, 255, 255);
     
   }
   

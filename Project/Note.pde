@@ -5,23 +5,27 @@ class Note {
   int ypos;
   
   // lane of the note
-  int k;
+  int lane;
   
   // time to show up
   int time;
   
   // constants
-  int size;
+  int radius;
   int speed;
 
   // constructor
-  Note(int _k, int _t) {
-    k = _k;
-    time = _t;
-    size = 60;
+  Note(int _laneNo, int _time) {
+    lane = _laneNo;
+    time = _time;
+    radius = 30;
     speed = 3;
+    
+    xpos = game.lanePos + (lane - 1)*game.laneGap;
+    ypos = 20;
 
-    switch(k) {
+    /*
+    switch(lane) {
     case 1:
       xpos = 50 + 10; 
       ypos = 20;
@@ -43,12 +47,13 @@ class Note {
       ypos = 1000;
       break;
     }
+    */
   }
   
   void display() {
     if (millis() > time) {
       fill(255, 0, 255);
-      ellipse(xpos + size/2, ypos + size/2, size, size);
+      ellipse(xpos, ypos, 2*radius, 2*radius);
       ypos += speed;
     }
   }
