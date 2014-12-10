@@ -34,6 +34,8 @@ class Keyboard {
     stroke(5);
     line(xpos, ypos, xpos + size/2, ypos + size/2);
     
+    over = false;
+    
     // for (each pixel) in the keyboard,  // not looping for every pixel because of performance issue.
     for (int x = xpos; x < xpos + size; x += 5) {
       for (int y = ypos; y < ypos + size; y += 5) {
@@ -58,9 +60,10 @@ class Keyboard {
             // change state
             over = true;
             
+            break;
+            
           } else {
             c = color(255);
-            over = false;
           }
           
         }
