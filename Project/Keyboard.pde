@@ -174,7 +174,7 @@ class HitEffector {
   
   void display() {
     
-    if (framesPassed >= lastingFrames) {
+    if (this.framesPassed >= this.lastingFrames) {
       return;
     }
     
