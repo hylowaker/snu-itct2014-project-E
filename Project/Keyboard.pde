@@ -12,77 +12,100 @@ class Keyboard {
 
   // key state
   boolean over;
-  int accuracyFlash;
-  Timer flashTimer;
+  HitEffector[] flashers = new HitEffector[5];
+  int flasherNumber = 0;
+  
+  //int accuracyFlash;
+  //Timer flashTimer;
+  //int framesPassed;
 
   // constants
   int radius = 40;
   int threshold = 50;
 
   // constructor
-  Keyboard(int _lane, int _x, int _y) {
-    lane = _lane;
-    xpos = _x;
-    ypos = _y;
-    fillColor = color(255, 255, 255);
-    over = false;
-    flashTimer = new Timer(800);
+  Keyboard(int lane, int xpos, int ypos) {
+    this.lane = lane;
+    this.xpos = xpos;
+    this.ypos = ypos;
+    this.fillColor = color(255, 255, 255);
+    for (int i=0; i < flashers.length; i++) {
+      flashers[i] = new HitEffector(xpos, ypos, this.radius);
+    }
+    //this.flashTimer = new Timer(800);
   }
+
 
   void display() {
 
     // show keys
     noStroke();
-    fill(fillColor);
-    ellipse(xpos, ypos, 2*radius, 2*radius);
+    fill(this.fillColor);
+    ellipse(this.xpos, this.ypos, 2*this.radius, 2*this.radius);
 
     // show flashes
-    if (accuracyFlash > 0) {
-      flasher();
-      if (flashTimer.isFinished()) {
-        accuracyFlash = 0;
-        framesPassed = 0;
+    for (int i=0; i < flashers.length; i++) {
+      flashers[i].display();
+    }
+    
+    /*
+    if (this.accuracyFlash > 0) {
+      this.flasher();
+      if (this.flashTimer.isFinished()) {
+        this.accuracyFlash = 0;
+        this.framesPassed = 0;
       }
     }
+    */
 
     strokeWeight(1);
 
     //#####debug line
     stroke(10, 10, 10);
-    line(xpos - radius, ypos - radius, xpos, ypos);
+    line(this.xpos - this.radius, this.ypos - this.radius, this.xpos, this.ypos);
   }
 
-  void detectRed() {
 
-    over = false;
+  void detectColors() {
+
+    this.over = false;
 
     // for (each pixel) in the keyboard,  // not looping for every pixel because of performance issue.
-    for (int x = xpos - radius; x < xpos + radius; x += 5) {
-      for (int y = ypos - radius; y < ypos + radius; y += 5) {
+    for (int x = this.xpos - this.radius; x < this.xpos + this.radius; x += 5) {
+      for (int y = this.ypos - this.radius; y < this.ypos + this.radius; y += 5) {
 
         // if the pixel is in the circle,
-        if (isIntersected(x, y, xpos, ypos, radius)) {
+        if (this.isIntersected(x, y, this.xpos, this.ypos, this.radius)) {
 
-          stroke(2); 
+          stroke(10, 10, 10); 
           ellipse(x, y, 1, 1); //#####debug
 
           // pick the color of the pixel
           color pixC = cam.pixels[y*cam.width + x];
-          float redity = red(pixC) - 0.5*green(pixC)- 0.5*blue(pixC);
+          float detect = 0;
+          if (this.lane == 1 || this.lane == 2) {
+            detect = red(pixC) - 0.5*green(pixC)- 0.5*blue(pixC);
+          } else if (this.lane == 3 || this.lane == 4) {
+            detect = blue(pixC) - 0.5*green(pixC)- 0.5*red(pixC);
+          }
 
           // if the color of the pixel is red enough,
-          if (redity > threshold) {
+          if (detect > this.threshold) {
 
             // change state
-            over = true;
-            fillColor = color(255, 0, 0);
+            this.over = true;
+            if (this.lane == 1 || this.lane == 2) {
+              this.fillColor = color(255, 0, 0);
+            } else if (this.lane == 3 || this.lane == 4) {
+              this.fillColor = color(0, 0, 255);
+            }
             return;
           }
         }
       }
     }
 
-    fillColor = color(255, 255, 255);
+    this.fillColor = color(255, 255, 255);
   }
 
 
@@ -94,16 +117,20 @@ class Keyboard {
     }
   }
 
+
   void flash(int accuracy) {
-    accuracyFlash = accuracy;
-    flashTimer.start();
+    flashers[this.flasherNumber].accuracy = accuracy;
+    flashers[this.flasherNumber].framesPassed = 0;
+    this.flasherNumber = (this.flasherNumber + 1) % 5;
+    
+    //this.accuracyFlash = accuracy;
+    //this.flashTimer.start();
   }
 
-
-  int framesPassed;
+  /*
   void flasher() {
     color c;
-    switch (accuracyFlash) { 
+    switch (this.accuracyFlash) { 
     case 1: 
       c = color(70, 70, 180); 
       break; 
@@ -117,10 +144,60 @@ class Keyboard {
       c = color(0, 0, 0); 
       break;
     }
-    stroke(c, 255 - 8*framesPassed); 
+    stroke(c, 255 - 8*this.framesPassed); 
     strokeWeight(9); 
     noFill();
-    ellipse(xpos, ypos, 2.1*radius + 5*framesPassed, 2.1*radius + 5*framesPassed);
-    framesPassed += 1;
+    ellipse(this.xpos, this.ypos, 2.1*this.radius + 5*this.framesPassed, 2.1*this.radius + 5*this.framesPassed);
+    this.framesPassed += 1;
+  }
+  */
+}
+
+
+// HitEffector makes effect when you hit keys
+
+class HitEffector {
+  
+  int xpos;
+  int ypos;
+  int radius;
+
+  int lastingFrames = 40;
+  int framesPassed = 1000;
+  int accuracy = 0;
+  
+  HitEffector(int xpos, int ypos, int radius) {
+    this.xpos = xpos;
+    this.ypos = ypos;
+    this.radius = radius;
+  }
+  
+  void display() {
+    
+    if (framesPassed >= lastingFrames) {
+      return;
+    }
+    
+    color c;
+    switch (this.accuracy) { 
+    case 1: 
+      c = color(70, 70, 180); 
+      break; 
+    case 2: 
+      c = color(200, 100, 180); 
+      break; 
+    case 3: 
+      c = color(250, 230, 140); 
+      break; 
+    default: 
+      c = color(0, 0, 0); 
+      break;
+    }
+    stroke(c, 255 - 8*this.framesPassed); 
+    strokeWeight(9); 
+    noFill();
+    ellipse(this.xpos, this.ypos, 2.1*this.radius + 5*this.framesPassed, 2.1*this.radius + 5*this.framesPassed);
+    this.framesPassed += 1;
   }
 }
+
