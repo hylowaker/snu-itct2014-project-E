@@ -9,30 +9,45 @@ class GameCore {
 
   // constructor
   GameCore() {
-    hp = 100;
+    this.hp = 100;
   }
 
-  // create note objects (## experimental)
-  void setupNotes() {
-    notes[0] = new Note(2, 3000);
-    notes[1] = new Note(1, 5000);
-    notes[2] = new Note(4, 1000);
+  // create note objects
+  void setupNotes(String songname) {
+
+    if (songname == "getlucky") {
+
+      notes = new Note[13];
+
+      notes[0] = new Note(1, 0);
+      notes[1] = new Note(3, 0);
+      notes[2] = new Note(1, 500);  
+      notes[3] = new Note(1, 1000);
+      notes[4] = new Note(2, 1000);
+      notes[5] = new Note(1, 1500);
+      notes[6] = new Note(1, 2000);
+      notes[7] = new Note(3, 2000);
+      notes[8] = new Note(1, 2500);
+      notes[9] = new Note(1, 3000);
+      notes[10] = new Note(3, 3000);
+      notes[11] = new Note(1, 3500);
+      notes[12] = new Note(1, 3750);
+    }
   }
 
   // create key objects
   void setupKeyboards() {
     for (int i=0; i < keys.length; i++) {
-      keys[i] = new Keyboard(i+1, lanePos + i*laneGap, 4*cam.height/5);
+      keys[i] = new Keyboard(i+1, this.lanePos + i*this.laneGap, 4*height/5);
     }
   }
 
   // Game rule loops (e.g. check if notes are hit or missed)
-  void rule() {
-    
-    noteMissedCheckingLoop();
-    
-    noteHitCheckingLoop();
- 
+  void ruleLoop() {
+
+    this.noteMissedCheckingLoop();
+
+    this.noteHitCheckingLoop();
   }
 
   // show hp gauge
@@ -40,83 +55,81 @@ class GameCore {
     fill(0, 255, 0);
     rect(600, 50, 20, 2*100);
     fill(255);
-    rect(600, 50, 20, 2*(100 - hp));
+    rect(600, 50, 20, 2*(100 - this.hp));
   }
-  
+
+
   void noteMissedCheckingLoop() {
-    
+
     for (int i=0; i < notes.length; i++) {
 
       // if the note passes bottom of the screen:
       if (notes[i].ypos >= height) {
 
         // hp decreases
-        hp -= 5;
+        this.hp -= 5;
 
-        // reset the note and drop it again (## this code will be deleted)
+        // reset the note and drop it again (## for debugging)
         notes[i].ypos = -100;
 
+        // notes disappear when missed (## this code is temporarily deactivated)
+        /*
+        notes[i].invisible = true;
+        notes[i].ypos = -100; 
+        notes[i].speed = 0;
+        */
+
         // hp cannot be negative number
-        if (hp <= 0) {
-          hp = 0;
+        if (this.hp <= 0) {
+          this.hp = 0;
         }
       }
     }
   }
-  
+
+
   void noteHitCheckingLoop() {
-    
-    // ##### this function need to be optimized
-    
+
+    // #####
+
     // note hit check
     for (int i=0; i < keys.length; i++) {
       for (int j=0; j < notes.length; j++) {
-        
+
         // (not necessary. just for safety)
         if (keys[i].lane != notes[j].lane) {
           continue;
         }
-        
-        int tmpAccu = intersectedAccuracy(keys[i], notes[j]);
-        
+
+        int tmpAccu = this.intersectedAccuracy(keys[i], notes[j]);
+
         if (tmpAccu >= 1) {
-          if (keys[i].over) {
-            notes[j].ypos = -100;
-            keys[i].flash(tmpAccu);
+          
+          if(keys[i].over) {
+          notes[j].ypos = -100; // ### for debugging
+          
+          // notes disappear when correctly hit (## this code is temporarily deactivated)
+          /*
+          notes[j].invisible = true;
+          notes[j].ypos = -100; notes[j].speed = 0;
+          */  
+                    
+          keys[i].flash(tmpAccu);
           }
         }
-
-        /*
-        // if the key and the note are close enough:
-        if (isIntersected(keys[i].xpos, keys[i].ypos, notes[j].xpos, notes[j].ypos, keys[i].radius, notes[j].radius)) {
-
-          // if the key is pressed:
-          if (keys[i].over) {
-            notes[j].ypos = -100;
-          }
-        
-        }
-        */
       }
     }
   }
 
-//  boolean isIntersected(int x1, int y1, int x2, int y2, int r1, int r2) {
-//    if (dist(x1, y1, x2, y2) < (r1 + r2)/2) {
-//      return true;
-//    } else {
-//      return false;
-//    }
-//  }
-  
+
   int intersectedAccuracy(Keyboard _key, Note _note) {
-    
+
     if (_key.lane != _note.lane) {
       return 0;
     }
-    
+
     int tempDist = abs(_key.ypos - _note.ypos);
-    
+
     if (tempDist > 50) {
       return 0;
     } else if (tempDist > 30) {
@@ -127,6 +140,5 @@ class GameCore {
       return 3;
     }
   }
-  
 }
 

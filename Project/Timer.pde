@@ -3,19 +3,19 @@ class Timer {
   int savedTime;
   int totalTime;
 
-  Timer(int tempTotalTime) {
-    totalTime = tempTotalTime;
+  Timer(int totalTime) {
+    this.totalTime = totalTime;
   }
 
   void start() {
-    savedTime = millis();
+    this.savedTime = millis();
   }
 
   boolean isFinished() {
     // calculates time passed
-    int timePassed = millis() - savedTime;
+    int timePassed = millis() - this.savedTime;
     // check time passed
-    if (timePassed > totalTime) {
+    if (timePassed > this.totalTime) {
       return true;
     } else {
       return false;

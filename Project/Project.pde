@@ -5,8 +5,8 @@ Capture cam;
 AudioPlayer player;
 Minim minim;
 
-Keyboard[] keys = new Keyboard[4];
-Note[] notes = new Note[3];
+Keyboard[] keys;
+Note[] notes;
 GameCore game;
 Timer songTimer;
 Startpage startpage;
@@ -14,26 +14,26 @@ int page = 0;
 
 void setup() {
   size(640, 480);
-
-  // setup audio
-  minim = new Minim(this);
-  player = minim.loadFile("getlucky.mp3", 100000);
-
-
-  // setup cam, game, combotimer
-  cam = new Capture(this, width, height, 30);
+  
   game = new GameCore();
+
+  // setup audio. player object is initialized when song selected
+  minim = new Minim(this);
+  
+  // setup keys. notes array of objects is initialized when song selected
+  keys = new Keyboard[4];
+  game.setupKeyboards();
+
+  // setup cam
+  cam = new Capture(this, width, height, 30);
+  cam.start();
+  
   //## combotimer = new Timer(1500); // ##experimental
   
   songTimer = new Timer(100000);
-
-  game.setupNotes();
   
   startpage = new Startpage();
 
-  game.setupKeyboards();
-
-  cam.start();
 }
 
 void draw() {
@@ -57,7 +57,7 @@ void draw() {
 
     for (int i=0; i < keys.length; i++) {
       keys[i].display();
-      keys[i].detectRed();
+      keys[i].detectColors();
     }
 
     for (int i=0; i < notes.length; i++) {
@@ -66,7 +66,7 @@ void draw() {
 
 
     game.displayHP();
-    game.rule();
+    game.ruleLoop();
   }
 }
 
@@ -106,6 +106,8 @@ boolean over1() {
 }
 void mousePressed() { //for page change
   if (over1()) {
+    player = minim.loadFile("getlucky.mp3", 100000);
+    game.setupNotes("getlucky");
     page = 1;
     songTimer.start();
   }
