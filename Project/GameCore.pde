@@ -22,14 +22,29 @@ class GameCore {
   // create key objects
   void setupKeyboards() {
     for (int i=0; i < keys.length; i++) {
-      keys[i] = new Keyboard(lanePos + i*laneGap, 4*cam.height/5);
+      keys[i] = new Keyboard(i+1, lanePos + i*laneGap, 4*cam.height/5);
     }
   }
 
-  // check if notes are hit or missed
+  // Game rule loops (e.g. check if notes are hit or missed)
   void rule() {
+    
+    noteMissedCheckingLoop();
+    
+    noteHitCheckingLoop();
+ 
+  }
 
-    // note miss check
+  // show hp gauge
+  void displayHP() {
+    fill(0, 255, 0);
+    rect(600, 50, 20, 2*100);
+    fill(255);
+    rect(600, 50, 20, 2*(100 - hp));
+  }
+  
+  void noteMissedCheckingLoop() {
+    
     for (int i=0; i < notes.length; i++) {
 
       // if the note passes bottom of the screen:
@@ -47,11 +62,31 @@ class GameCore {
         }
       }
     }
-
+  }
+  
+  void noteHitCheckingLoop() {
+    
+    // ##### this function need to be optimized
+    
     // note hit check
     for (int i=0; i < keys.length; i++) {
       for (int j=0; j < notes.length; j++) {
+        
+        // (not necessary. just for safety)
+        if (keys[i].lane != notes[j].lane) {
+          continue;
+        }
+        
+        int tmpAccu = intersectedAccuracy(keys[i], notes[j]);
+        
+        if (tmpAccu >= 1) {
+          if (keys[i].over) {
+            notes[j].ypos = -100;
+            keys[i].flash(tmpAccu);
+          }
+        }
 
+        /*
         // if the key and the note are close enough:
         if (isIntersected(keys[i].xpos, keys[i].ypos, notes[j].xpos, notes[j].ypos, keys[i].radius, notes[j].radius)) {
 
@@ -59,25 +94,39 @@ class GameCore {
           if (keys[i].over) {
             notes[j].ypos = -100;
           }
+        
         }
+        */
       }
     }
   }
 
-  // show hp gauge
-  void displayHP() {
-    fill(0, 255, 0);
-    rect(600, 50, 20, 2*100);
-    fill(255);
-    rect(600, 50, 20, 2*(100 - hp));
-  }
-
-  boolean isIntersected(int x1, int y1, int x2, int y2, int r1, int r2) {
-    if (dist(x1, y1, x2, y2) < r1 + r2) {
-      return true;
+//  boolean isIntersected(int x1, int y1, int x2, int y2, int r1, int r2) {
+//    if (dist(x1, y1, x2, y2) < (r1 + r2)/2) {
+//      return true;
+//    } else {
+//      return false;
+//    }
+//  }
+  
+  int intersectedAccuracy(Keyboard _key, Note _note) {
+    
+    if (_key.lane != _note.lane) {
+      return 0;
+    }
+    
+    int tempDist = abs(_key.ypos - _note.ypos);
+    
+    if (tempDist > 50) {
+      return 0;
+    } else if (tempDist > 30) {
+      return 1;
+    } else if (tempDist > 10) {
+      return 2;
     } else {
-      return false;
+      return 3;
     }
   }
+  
 }
 

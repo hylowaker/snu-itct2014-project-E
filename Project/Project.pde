@@ -8,7 +8,7 @@ Minim minim;
 Keyboard[] keys = new Keyboard[4];
 Note[] notes = new Note[3];
 GameCore game;
-Timer song1;
+Timer songTimer;
 Startpage startpage;
 int page = 0;
 
@@ -25,7 +25,7 @@ void setup() {
   game = new GameCore();
   //## combotimer = new Timer(1500); // ##experimental
   
-    song1 = new Timer(100000);
+  songTimer = new Timer(100000);
 
   game.setupNotes();
   
@@ -38,9 +38,13 @@ void setup() {
 
 void draw() {
 
+  
   if (page == 0) {
+    
     startpage.display();
+    
   } else if (page == 1) {
+    
     player.play();
     // show camera image, with flipped
     if (cam.available()) {
@@ -53,6 +57,7 @@ void draw() {
 
     for (int i=0; i < keys.length; i++) {
       keys[i].display();
+      keys[i].detectRed();
     }
 
     for (int i=0; i < notes.length; i++) {
@@ -99,10 +104,10 @@ boolean over1() {
     return false;
   }
 }
-void mousePressed() {//for page change
+void mousePressed() { //for page change
   if (over1()) {
     page = 1;
-    song1.start();
+    songTimer.start();
   }
 }
 

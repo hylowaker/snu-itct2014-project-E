@@ -11,15 +11,13 @@ class Note {
   int time;
   
   // constants
-  int radius;
-  int speed;
+  int radius = 30;
+  int speed = 3;
 
   // constructor
   Note(int _laneNo, int _time) {
     lane = _laneNo;
     time = _time;
-    radius = 30;
-    speed = 3;
     
     xpos = game.lanePos + (lane - 1)*game.laneGap;
     ypos = 20;
@@ -51,7 +49,7 @@ class Note {
   }
   
   void display() {
-    if (millis() - song1.savedTime > time) {
+    if (millis() - songTimer.savedTime > time) {
       fill(255, 0, 255);
       ellipse(xpos, ypos, 2*radius, 2*radius);
       ypos += speed;
