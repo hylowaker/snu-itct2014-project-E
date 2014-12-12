@@ -11,12 +11,17 @@ Keyboard[] keys;
 Note[] notes;
 GameCore game;
 Timer songTimer;
+Timer songsync1;
+Timer songsync2;
 Timer songsync3;
 Startpage startpage;
 int page = 0;
 
 void setup() {
+  noStroke();
   size(640, 480);
+  songsync1 = new Timer(500);
+  songsync2 = new Timer(700);
   songsync3 = new Timer(800);
   game = new GameCore();
   for(int i=0; i<keysimage.length; i++){
@@ -59,10 +64,7 @@ void draw() {
       cam.read();
       flip();
     }
-
     image(cam, 0, 0);
-
-
     for (int i=0; i < keys.length; i++) {
       keys[i].display();
       keys[i].detectColors();
@@ -72,9 +74,10 @@ void draw() {
       notes[i].display();
     }
 
-
-    game.display();
     game.ruleLoop();
+    game.display();
+ 
+    game.detectDrums();
   }
 }
 
@@ -85,21 +88,40 @@ void draw() {
 
 void keyPressed() {//for debugging
   if (key == 'q') {
-    for (int i=0; i<notes.length; i++) {
-      notes[i].speed *= 0.5;
-    }
+    game.pause();
   }
   if (key == 'w') {
-    for (int i=0; i<notes.length; i++) {
-      notes[i].speed *= 2;
-    }
+    game.resume();
   }
-  if (key == 'e') {
-    for (int i=0; i<notes.length; i++) {
-      notes[i].speed *= -1;
-    }
-  }
+
   if ( key == 'r') {//not used
-    page = 0;
+    game.back();
+  }
+  if( key == 'n'){
+    startpage.pagecount++;
   }
 }
+
+
+ void mousePressed() { //for page change
+    if (startpage.over() == 1) {
+      player = minim.loadFile("loveyou.mp3", 100000);
+      game.setupNotes("loveyou");
+      page = 1;
+      songTimer.start();
+      songsync1.start();
+    } else if (startpage.over() == 2) {
+      player = minim.loadFile("getlucky.mp3", 100000);
+      game.setupNotes("song2");
+      page = 1;
+      songTimer.start();
+      songsync2.start();
+    } else if (startpage.over() == 3) {
+      player = minim.loadFile("getlucky.mp3", 100000);
+      game.setupNotes("getlucky");
+      page = 1;
+      songTimer.start();
+      songsync3.start();
+    }
+    startpage.pagecount++;
+  }

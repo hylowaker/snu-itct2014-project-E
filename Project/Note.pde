@@ -34,7 +34,7 @@ class Note {
       return;
     }
     
-    if (millis() - songTimer.savedTime > this.time) {
+    if (millis() - songTimer.savedTime-game.starttime > this.time) {
       rectMode(CENTER);
       fill(210, 130, 210);
       rect(this.xpos, this.ypos, 2*this.radius, this.radius/2);

@@ -29,7 +29,7 @@ class Keyboard {
     this.lane = lane;
     this.xpos = xpos;
     this.ypos = ypos;
-    imagesize = 100;  
+    imagesize = 80;  
     this.fillColor = color(255, 255, 255);
     for (int i=0; i < flashers.length; i++) {
       flashers[i] = new HitEffector(xpos, ypos, this.radius);
@@ -66,7 +66,7 @@ class Keyboard {
 
     //#####debug line
     stroke(10, 10, 10);
-    line(this.xpos - this.radius, this.ypos - this.radius, this.xpos, this.ypos);
+    //line(this.xpos - this.radius, this.ypos - this.radius, this.xpos, this.ypos);
   }
 
 
@@ -86,21 +86,22 @@ class Keyboard {
 
           // pick the color of the pixel
           color pixC = cam.pixels[y*cam.width + x];
-          float detect = 0;
-          if (this.lane == 1 || this.lane == 2) {
+          float detect1 = red(pixC) - 0.5*green(pixC)- 0.5*blue(pixC);
+          float detect2 = blue(pixC) - 0.5*green(pixC)- 0.5*red(pixC);
+         /* if (this.lane == 1 || this.lane == 3) {
             detect = red(pixC) - 0.5*green(pixC)- 0.5*blue(pixC);
-          } else if (this.lane == 3 || this.lane == 4) {
+          } else if (this.lane == 2 || this.lane == 4) {
             detect = blue(pixC) - 0.5*green(pixC)- 0.5*red(pixC);
-          }
+          }*/
 
           // if the color of the pixel is red enough,
-          if (detect > this.threshold) {
+          if (detect1 > this.threshold || detect2> this.threshold) {
 
             // change state
             this.over = true;
-            if (this.lane == 1 || this.lane == 2) {
+            if (this.lane == 1 || this.lane == 3) {
               this.fillColor = color(255, 0, 0);
-            } else if (this.lane == 3 || this.lane == 4) {
+            } else if (this.lane == 2 || this.lane == 4) {
               this.fillColor = color(0, 0, 255);
             }
             return;
@@ -186,12 +187,15 @@ class HitEffector {
     switch (this.accuracy) { 
     case 1: 
       c = color(70, 70, 180); 
+      //text("BAD", 200, 150); 
       break; 
     case 2: 
-      c = color(200, 100, 180); 
+      c = color(200, 100, 180);
+      //text("GOOD", 200, 150); 
       break; 
     case 3: 
       c = color(250, 230, 140); 
+      //text("GREAT" , 200, 150);
       break; 
     default: 
       c = color(0, 0, 0); 
@@ -200,6 +204,8 @@ class HitEffector {
     stroke(c, 255 - 8*this.framesPassed); 
     strokeWeight(9); 
     noFill();
+    
+    
      
     ellipse(this.xpos, this.ypos, 2.1*this.radius + 5*this.framesPassed, 2.1*this.radius + 5*this.framesPassed);
     this.framesPassed += 1;
