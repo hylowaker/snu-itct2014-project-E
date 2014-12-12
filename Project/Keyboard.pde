@@ -7,6 +7,7 @@ class Keyboard {
   int ypos;
 
   int lane;
+  int imagesize;
   // color to fill
   color fillColor;
 
@@ -20,7 +21,7 @@ class Keyboard {
   //int framesPassed;
 
   // constants
-  int radius = 40;
+  int radius = 30;
   int threshold = 50;
 
   // constructor
@@ -28,12 +29,14 @@ class Keyboard {
     this.lane = lane;
     this.xpos = xpos;
     this.ypos = ypos;
+    imagesize = 100;  
     this.fillColor = color(255, 255, 255);
     for (int i=0; i < flashers.length; i++) {
       flashers[i] = new HitEffector(xpos, ypos, this.radius);
     }
     //this.flashTimer = new Timer(800);
-  }
+    
+}
 
 
   void display() {
@@ -41,7 +44,8 @@ class Keyboard {
     // show keys
     noStroke();
     fill(this.fillColor);
-    ellipse(this.xpos, this.ypos, 2*this.radius, 2*this.radius);
+    image(keysimage[this.lane-1],this.xpos-imagesize/2, this.ypos-imagesize/2,imagesize,imagesize);
+    //ellipse(this.xpos, this.ypos, 2*this.radius, 2*this.radius);
 
     // show flashes
     for (int i=0; i < flashers.length; i++) {
@@ -77,8 +81,8 @@ class Keyboard {
         // if the pixel is in the circle,
         if (this.isIntersected(x, y, this.xpos, this.ypos, this.radius)) {
 
-          stroke(10, 10, 10); 
-          ellipse(x, y, 1, 1); //#####debug
+          //stroke(10, 10, 10); 
+          //ellipse(x, y, 1, 1); //#####debug
 
           // pick the color of the pixel
           color pixC = cam.pixels[y*cam.width + x];
@@ -174,7 +178,7 @@ class HitEffector {
   
   void display() {
     
-    if (this.framesPassed >= this.lastingFrames) {
+    if (framesPassed >= lastingFrames) {
       return;
     }
     
@@ -196,8 +200,8 @@ class HitEffector {
     stroke(c, 255 - 8*this.framesPassed); 
     strokeWeight(9); 
     noFill();
+     
     ellipse(this.xpos, this.ypos, 2.1*this.radius + 5*this.framesPassed, 2.1*this.radius + 5*this.framesPassed);
     this.framesPassed += 1;
   }
 }
-

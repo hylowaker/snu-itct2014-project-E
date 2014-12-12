@@ -6,7 +6,7 @@ class GameCore {
   // constants: position of lanes and notes
   int lanePos = 90;
   int laneGap = 150;
-
+  int threshold = 100;
   // constructor
   GameCore() {
     this.hp = 100;
@@ -38,8 +38,32 @@ class GameCore {
   // create key objects
   void setupKeyboards() {
     for (int i=0; i < keys.length; i++) {
-      keys[i] = new Keyboard(i+1, this.lanePos + i*this.laneGap, 4*height/5);
+      keys[i] = new Keyboard(i+1, this.lanePos + i*this.laneGap, 420);
     }
+  }
+  
+    void detectDrums(){
+    int sumX = 0;
+    int sumY = 0;
+     for (int x = 0; x < cam.width; x += 10) {
+      for (int y = 0; y < cam.height; y += 10) {
+           float[] detect = new float[2];
+           color pixC = cam.pixels[y*cam.width + x];
+  
+            detect[0] = red(pixC) - 0.5*green(pixC)- 0.5*blue(pixC);         
+            detect[1] = blue(pixC) - 0.5*green(pixC)- 0.5*red(pixC);
+
+
+          // if the color of the pixel is red enough,
+          for(int j=0; j<2; j++){
+          if (detect[j] > this.threshold) {
+            sumX = sumX + x;
+            sumY = sumY + y;
+           }
+          }
+        
+      }
+     }
   }
 
   // Game rule loops (e.g. check if notes are hit or missed)
@@ -51,11 +75,15 @@ class GameCore {
   }
 
   // show hp gauge
-  void displayHP() {
+  void display() {
+    rectMode(CORNER);
     fill(0, 255, 0);
     rect(600, 50, 20, 2*100);
     fill(255);
     rect(600, 50, 20, 2*(100 - this.hp));
+    fill(255,255,0);
+    noStroke();
+    rect(0,keys[0].ypos-keys[0].imagesize/2-20,width,notes[0].radius/2);
   }
 
 
@@ -128,17 +156,16 @@ class GameCore {
       return 0;
     }
 
-    int tempDist = abs(_key.ypos - _note.ypos);
-
-    if (tempDist > 50) {
+    //int tempDist = abs(_key.ypos - _note.ypos);
+    int tempDist = abs((keys[0].ypos-keys[0].imagesize/2-20) - _note.ypos);//judge from line and note
+    if (tempDist > 30) {
       return 0;
-    } else if (tempDist > 30) {
+    } else if (tempDist > 15) {
       return 1;
-    } else if (tempDist > 10) {
+    } else if (tempDist > 8) {
       return 2;
     } else {
       return 3;
     }
   }
 }
-

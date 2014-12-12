@@ -15,7 +15,7 @@ class Note {
   boolean invisible;
   
   // constants
-  int radius = 15;
+  int radius = 25;
   
 
   // constructor
@@ -35,10 +35,10 @@ class Note {
     }
     
     if (millis() - songTimer.savedTime > this.time) {
-      fill(255, 0, 255);
-      ellipse(this.xpos, this.ypos, 2*this.radius, 2*this.radius);
+      rectMode(CENTER);
+      fill(210, 130, 210);
+      rect(this.xpos, this.ypos, 2*this.radius, this.radius/2);
       this.ypos += this.speed;
     }
   }
 }
-

@@ -4,18 +4,24 @@ import ddf.minim.*;
 Capture cam;
 AudioPlayer player;
 Minim minim;
+PImage[] keysimage = new PImage[4];
+
 
 Keyboard[] keys;
 Note[] notes;
 GameCore game;
 Timer songTimer;
+Timer songsync3;
 Startpage startpage;
 int page = 0;
 
 void setup() {
   size(640, 480);
-  
+  songsync3 = new Timer(800);
   game = new GameCore();
+  for(int i=0; i<keysimage.length; i++){
+    keysimage[i] = loadImage("key"+(i+1)+".png");
+  }
 
   // setup audio. player object is initialized when song selected
   minim = new Minim(this);
@@ -45,7 +51,9 @@ void draw() {
     
   } else if (page == 1) {
     
+    if(songsync3.isFinished()){
     player.play();
+    }
     // show camera image, with flipped
     if (cam.available()) {
       cam.read();
@@ -65,7 +73,7 @@ void draw() {
     }
 
 
-    game.displayHP();
+    game.display();
     game.ruleLoop();
   }
 }
@@ -95,21 +103,3 @@ void keyPressed() {//for debugging
     page = 0;
   }
 }
-
-
-boolean over1() {
-  if (mouseX>250 && mouseY>240 && mouseX<250+150 && mouseY<= 240+50) {
-    return true;
-  } else {
-    return false;
-  }
-}
-void mousePressed() { //for page change
-  if (over1()) {
-    player = minim.loadFile("getlucky.mp3", 100000);
-    game.setupNotes("getlucky");
-    page = 1;
-    songTimer.start();
-  }
-}
-
