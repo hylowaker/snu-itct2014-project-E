@@ -6,15 +6,16 @@ AudioPlayer player;
 Minim minim;
 PImage[] keysimage = new PImage[4];
 
-
 Keyboard[] keys;
 Note[] notes;
-GameCore game;
+GameCore game;    
 Timer songTimer;
 Timer songsync1;
 Timer songsync2;
 Timer songsync3;
 Startpage startpage;
+Debug debug = new Debug();
+
 int page = 0;
 
 void setup() {
@@ -24,7 +25,8 @@ void setup() {
   songsync2 = new Timer(700);
   songsync3 = new Timer(800);
   game = new GameCore();
-  for (int i=0; i<keysimage.length; i++) {
+
+  for (int i=0; i < keysimage.length; i++) {
     keysimage[i] = loadImage("key"+(i+1)+".png");
   }
 
@@ -46,13 +48,15 @@ void setup() {
   startpage = new Startpage();
 }
 
+
 void draw() {
 
 
-  if (page == 0) {
+  if (isGameOnStartpage()) {
 
     startpage.display();
-  } else if (page == 1) {
+    
+  } else if (!isGameOnStartpage()) {
 
     if (songsync3.isFinished()) {
       player.play();
@@ -80,6 +84,21 @@ void draw() {
 }
 
 
+void mousePressed() {
+  
+  if (isGameOnStartpage()) {
+  
+  startpage.clickButton();
+  }
+
+}
+
+
+
+
+boolean isGameOnStartpage() {
+  return page == 0;
+}
 
 
 
@@ -91,7 +110,7 @@ void keyPressed() {//for debugging
   if (key == 'w') {
     game.resume();
   }
-  if(key == 'f'){//cheat
+  if (key == 'f') {//cheat
     game.hp = 100;
   }
 
@@ -104,69 +123,22 @@ void keyPressed() {//for debugging
   if (key == 'b') {//back page
     startpage.pagecount--;
   }
-  if(game.song == "free"){
-    if(key == '1'){
+  if (game.song == "free") {
+    if (key == '1') {
       Note add = new Note(1, millis() - songTimer.savedTime-game.starttime);
       notes = (Note[])append(notes, add);
     }
-    if(key == '2'){
+    if (key == '2') {
       Note add = new Note(2, millis() - songTimer.savedTime-game.starttime);
       notes = (Note[])append(notes, add);
     }
-    if(key == '3'){
+    if (key == '3') {
       Note add = new Note(3, millis() - songTimer.savedTime-game.starttime);
       notes = (Note[])append(notes, add);
     }
-    if(key == '4'){
+    if (key == '4') {
       Note add = new Note(4, millis() - songTimer.savedTime-game.starttime);
       notes = (Note[])append(notes, add);
-    }
-  }
-  
-}
-void NextPage(){
-  if (startpage.pagecount<5) {
-    startpage.pagecount++;
-  }
-}
-
-void mousePressed() { //for page change
-  if(startpage.over() != 1){
-    NextPage();
-  }
-  if (startpage.over() == 1) {
-    if (startpage.pagecount==4) {
-   
-      player = minim.loadFile("free.mp3",1000);
-      game.setupNotes("free");
-      page = 1;
-      songTimer.start();
-    }
-  } else if (startpage.over() == 2) {
-    startpage.pagecount = 5;
-  } else if (startpage.over() == 3) {
-    if (startpage.pagecount==5) {
-      player = minim.loadFile("loveyou.mp3", 100000);
-      game.setupNotes("loveyou");
-      page = 1;
-      songTimer.start();
-      songsync1.start();
-    }
-  } else if (startpage.over() == 4) {
-    if (startpage.pagecount==5) {
-      player = minim.loadFile("getlucky.mp3", 100000);
-      game.setupNotes("song2");
-      page = 1;
-      songTimer.start();
-      songsync2.start();
-    }
-  } else if (startpage.over() == 5) {
-    if (startpage.pagecount==5) {
-      player = minim.loadFile("getlucky.mp3", 100000);
-      game.setupNotes("getlucky");
-      page = 1;
-      songTimer.start();
-      songsync3.start();
     }
   }
 }
