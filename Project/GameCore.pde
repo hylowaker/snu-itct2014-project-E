@@ -2,17 +2,20 @@ class GameCore {
 
   // game states
   int hp;
-
+  PImage gameover;
   // constants: position of lanes and notes
   int lanePos = 90;
   int laneGap = 150;
   int threshold = 100;
   int combo;
   int starttime = 0;
+  String song = "";
+  boolean end = false;
   // constructor
   GameCore() {
     this.hp = 100;
     this.combo = 0;
+    gameover = loadImage("gameover.png");
   }
 
   // create note objects
@@ -21,7 +24,7 @@ class GameCore {
       starttime = 0;
       int d = 666;
       notes = new Note[110];
-
+      end = false;
       //1th
       notes[0] = new Note(3, 0);
       notes[1] = new Note(4, 0);
@@ -156,6 +159,12 @@ class GameCore {
       notes[107] = new Note(3, 42*d);
       notes[108] = new Note(4, 43*d);
       notes[109] = new Note(2, 43*d);
+      song = songname;
+    } else if (songname == "free"){
+      starttime = 0;
+      notes = new Note[1];
+      song = songname;
+      notes[0] = new Note(1,1000000);
     } else if (songname == "song2") {//add note for song2
       starttime = 0;
       notes = new Note[3];
@@ -163,6 +172,7 @@ class GameCore {
       notes[0] = new Note(2, 0);
       notes[1] = new Note(4, 1000);
       notes[2] = new Note(1, 2000);
+      song = songname;
     } else if (songname == "getlucky") {
       starttime = 0;
       notes = new Note[13];
@@ -180,6 +190,7 @@ class GameCore {
       notes[10] = new Note(3, 3000);
       notes[11] = new Note(1, 3500);
       notes[12] = new Note(1, 3750);
+      song = songname;
     }
   }
 
@@ -240,13 +251,18 @@ class GameCore {
 
   // Game rule loops (e.g. check if notes are hit or missed)
   void ruleLoop() {
-
+   
     this.noteMissedCheckingLoop();
 
     this.noteHitCheckingLoop();
 
     if (this.hp <= 0) {
+      //this.hp = 0; // not gameover
       this.hp = 0;
+      player.pause();
+      player.rewind();
+      end = true;
+      
     }
     if (this.hp >= 100) {
       this.hp = 100;
@@ -270,6 +286,8 @@ class GameCore {
   // show hp gauge
   void display() {
     rectMode(CORNER);
+    if(game.song != "free"){
+    //hp bar
     if (hp>=60) {
       fill(0, 255, 0);
     } else if (hp>=30) {
@@ -280,14 +298,19 @@ class GameCore {
     rect(600, 50, 20, 2*100);
     fill(255);
     rect(600, 50, 20, 2*(100 - this.hp));
-
-    fill(255, 255, 0);
+    }
+    noStroke();
+    fill(204, 147, 76);
     rect(0, keys[0].ypos-keys[0].imagesize/2-20, width, notes[0].radius/2);
     //fill(255);
     //text(hp, 200, 250); // hp debugging
     if (combo != 0) {
       fill(0, 255, 0);
-      text("COMBO "+combo, 280, 250);
+      textSize(30);
+      text("COMBO "+combo, 250, 250);
+    }
+    if(end){
+      image(gameover,0,0,width,height);
     }
   }
 
@@ -297,7 +320,7 @@ class GameCore {
     for (int i=0; i < notes.length; i++) {
 
       // if the note passes bottom of the screen:
-      if (notes[i].ypos >= height) {
+      if (notes[i].ypos >= height-50) {
 
         // hp decreases
         this.hp -= 5;

@@ -65,7 +65,7 @@ class Keyboard {
     strokeWeight(1);
 
     //#####debug line
-    stroke(10, 10, 10);
+    //stroke(10, 10, 10);
     //line(this.xpos - this.radius, this.ypos - this.radius, this.xpos, this.ypos);
   }
 
