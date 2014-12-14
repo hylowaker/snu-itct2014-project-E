@@ -38,11 +38,17 @@ class Note {
       return;
     }
     
-    if (millis() - songTimer.savedTime-game.starttime > this.time) {
+    if (millis() - songTimer.savedTime - game.starttime > this.time) {
       rectMode(CENTER);
       fill(210, 130, 210);
       rect(this.xpos, this.ypos, 2*this.size, this.size/2);
       this.ypos += this.speed;
     }
+  }
+  
+  void hide() {
+    this.invisible = true;
+    this.ypos = -100;
+    this.speed = 0;
   }
 }

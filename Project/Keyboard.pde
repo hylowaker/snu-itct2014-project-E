@@ -88,7 +88,7 @@ class Keyboard {
           float detect2 = blue(pixC) - 0.5*green(pixC)- 0.5*red(pixC);
         
           // if the color of the pixel is red enough,
-          if (detect1 > this.threshold || detect2> this.threshold) {
+          if (detect1 > this.threshold || detect2 > this.threshold) {
 
             // change state
             this.over = true;
@@ -108,7 +108,8 @@ class Keyboard {
 
 
   boolean isIntersected(int x1, int y1, int x2, int y2, int r) {
-    if (dist(x1, y1, x2, y2) < r) {
+    float tmpDist = dist(x1, y1, x2, y2);
+    if (tmpDist < r && tmpDist > 0.625*r) {
       return true;
     } else {
       return false;

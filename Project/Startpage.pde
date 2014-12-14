@@ -1,22 +1,22 @@
 // Start page class
 
 class Startpage {
-  PImage [] imgs = new PImage[10]; 
+  PImage [] imgs = new PImage[9]; 
   int pagecount = 0;
    
   MenuButton freePlayButton, playAlongButton;
   SongButton song1Button, song2Button, song3Button;
 
   Startpage() {
-    this.imgs[0]= loadImage("lab.png");
-    this.imgs[1]= loadImage("start.gif");
-    this.imgs[2]= loadImage("lab_01.png");
-    this.imgs[3]= loadImage("lab_02.png");
-    this.imgs[4]= loadImage("poster.png");
-    this.imgs[5]= loadImage("poster_01.gif");
-    this.imgs[6]= loadImage("band01.png");
-    //this.imgs[7]= loadImage("band_01.png");
-    //this.imgs[8]= loadImage("band_02.png");
+    this.imgs[0] = loadImage("lab.png");
+    this.imgs[1] = loadImage("start.gif");
+    this.imgs[2] = loadImage("lab_01.png");
+    this.imgs[3] = loadImage("lab_02.png");
+    this.imgs[4] = loadImage("poster.png");
+    this.imgs[5] = loadImage("poster_01.gif");
+    this.imgs[6] = loadImage("band01.png");
+    this.imgs[7] = loadImage("clear.png");
+    this.imgs[8] = loadImage("gameover.jpg");
     this.freePlayButton = new MenuButton("band_01.png", 0, 360);
     this.playAlongButton = new MenuButton("band_02.png", 320, 360);
     this.song1Button = new SongButton("dont.png", 1, 320, 95, CENTER);
@@ -32,6 +32,7 @@ class Startpage {
       image(this.imgs[1], 0, 0);
       break;
       
+      // story images
       case 1:
       image(this.imgs[0], 0, 0, width, 360);
       image(this.imgs[2], 0, 360, width, 120);
@@ -47,17 +48,29 @@ class Startpage {
       image(this.imgs[5], 0, 360, width, 120);
       break;
       
+      // main menu
       case 4:
       image(this.imgs[6], 0, 0, width, 360);
       this.freePlayButton.display();
       this.playAlongButton.display();
       break;
       
+      // song selecting menu
       case 5:
       background(52, 56, 41);
       this.song1Button.display();
       this.song2Button.display();
       this.song3Button.display();
+      break;
+      
+      // game success
+      case 6:
+      image(this.imgs[7], 0, 0);
+      break;
+      
+      // game fail
+      case 7:
+      image(this.imgs[8], 0, 0);
       break;
     
       default:
@@ -66,128 +79,43 @@ class Startpage {
   }
 
 
-
-  void nextPage() {
-    if (this.pagecount < 5) {
-      this.pagecount += 1;
-    }
-  }
-
-
-
-  /* DEPRECATED
-  int over() {
-
-    if (mouseX > 0 && mouseY > 360 && mouseX < 320 && mouseY < 480) {
-      return 1;
-    } else if (mouseX > 320 && mouseY > 360 && mouseX < 640 && mouseY < 480) {
-      return 2;
-    } else if (mouseX > xpos1 && mouseY > ypos1 && mouseX < xpos1 + 150 && mouseY <= ypos1 + 50) {
-      return 3;
-    } else if (mouseX > xpos2 && mouseY > ypos2 && mouseX < xpos2 + 150 && mouseY <= ypos2 + 50) {
-      return 4;
-    } else if (mouseX > xpos3 && mouseY > ypos3 && mouseX < xpos3 + 150 && mouseY <= ypos3 + 50) {
-      return 5;
-    } else {
-      return 0;
-    }
-    
-  }
-  */
-
-
   void clickButton() {
     
     if (this.pagecount < 4) {
       this.nextPage();
+      
     } else if (this.pagecount == 4) {
       if (this.freePlayButton.isMouseOver()) {
-        player = minim.loadFile("free.mp3", 1000);
+        //player = minim.loadFile("free.mp3", 1000);
         game.setupNotes("free");
         page = 1;
-        songTimer.start();
+        //songTimer.start();
       } else if (this.playAlongButton.isMouseOver()) {
         this.nextPage();
       } else {
-        //pass
       }
+      
     } else if (this.pagecount == 5) {
       if (this.song1Button.isMouseOver()) {
-        player = minim.loadFile("Don't look back in anger.mp3", 100000);
-        game.setupNotes("Don't look back in anger");
-        page = 1;
-        songTimer.start();
-        songsync1.start();
+        game.setupSong("Don't look back in anger");
       } else if (this.song2Button.isMouseOver()) {
-        player = minim.loadFile("loveyou.mp3", 100000);
-        game.setupNotes("I love you oh thank you");
-        page = 1;
-        songTimer.start();
-        songsync2.start();
+        game.setupSong("I love you oh thank you");
       } else if (this.song3Button.isMouseOver()) {
-        player = minim.loadFile("getlucky.mp3", 100000);
-        game.setupNotes("Get Lucky");
-        page = 1;
-        songTimer.start();
-        songsync3.start();
+        game.setupSong("Get Lucky");
+      } else {
       }
         
+    } else if (this.pagecount == 6 || this.pagecount == 7) {
+      game.back();
     }
-        
-      
-      
-      
-    /* DEPRECATED
-    if (this.whichButtonClicked() != 1) {
-      startpage.nextPage();
-    }
-
-    if (this.whichButtonClicked() == 1) {
-      
-      if (startpage.pagecount == 4) {
-
-        player = minim.loadFile("free.mp3", 1000);
-        game.setupNotes("free");
-        page = 1;
-        songTimer.start();
-      }
-      
-    } else if (startpage.over() == 2) {
-      startpage.pagecount = 5;
-      
-    } else if (startpage.over() == 3) {
-      
-      if (startpage.pagecount==5) {
-        player = minim.loadFile("loveyou.mp3", 100000);
-        game.setupNotes("loveyou");
-        page = 1;
-        songTimer.start();
-        songsync1.start();
-      }
-      
-    } else if (startpage.over() == 4) {
-      
-      if (startpage.pagecount==5) {
-        player = minim.loadFile("getlucky.mp3", 100000);
-        game.setupNotes("I love you oh thank you");
-        page = 1;
-        songTimer.start();
-        songsync2.start();
-      }
-      
-    } else if (startpage.over() == 5) {
-      
-      if (startpage.pagecount==5) {
-        player = minim.loadFile("getlucky.mp3", 100000);
-        game.setupNotes("Get Lucky");
-        page = 1;
-        songTimer.start();
-        songsync3.start();
-      }
-      
-    }
-    */
     
+  }
+  
+  
+  void nextPage() {
+    if (this.pagecount < 5) {
+      this.pagecount += 1;
+    }
   }
 }
 
