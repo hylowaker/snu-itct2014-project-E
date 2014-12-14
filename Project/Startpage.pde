@@ -2,17 +2,10 @@
 
 class Startpage {
   PImage [] imgs = new PImage[10]; 
-//  int xpos1 = 250;
-//  int ypos1 = 120;
-//  int xpos2 = 250;
-//  int ypos2 = 195;
-//  int xpos3 = 250;
-//  int ypos3 = 270;
   int pagecount = 0;
    
   MenuButton freePlayButton, playAlongButton;
   SongButton song1Button, song2Button, song3Button;
-
 
   Startpage() {
     this.imgs[0]= loadImage("lab.png");
@@ -56,27 +49,15 @@ class Startpage {
       
       case 4:
       image(this.imgs[6], 0, 0, width, 360);
-      //image(this.imgs[7], 0, 360, width/2, 120);
       this.freePlayButton.display();
-      //image(this.imgs[8], 320, 360, width/2, 120);
       this.playAlongButton.display();
       break;
       
       case 5:
       background(52, 56, 41);
-      fill(255);
-      //rect(this.xpos1, this.ypos1, 150, 50);
-      //rect(this.xpos2, this.ypos2, 150, 50);
-      //rect(this.xpos3, this.ypos3, 150, 50);
-      fill(0);
-      textSize(20);
-      ////text("Demo Game", 270, 100);
-      //text("Don't look back in anger", xpos1 + 20, ypos1 + 30);
-      //text("I love you oh thank you", xpos2 + 20, ypos2 + 30);
-      //text("Get Lucky", xpos3 + 20, ypos3 + 30);
-      song1Button.display();
-      song2Button.display();
-      song3Button.display();
+      this.song1Button.display();
+      this.song2Button.display();
+      this.song3Button.display();
       break;
     
       default:

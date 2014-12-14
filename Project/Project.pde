@@ -4,7 +4,7 @@ import ddf.minim.*;
 Capture cam;
 AudioPlayer player;
 Minim minim;
-PImage[] keysimage = new PImage[4];
+//PImage[] keysimage = new PImage[4];
 
 Keyboard[] keys;
 Note[] notes;
@@ -26,9 +26,9 @@ void setup() {
   songsync3 = new Timer(800);
   game = new GameCore();
 
-  for (int i=0; i < keysimage.length; i++) {
-    keysimage[i] = loadImage("key"+(i+1)+".png");
-  }
+  //for (int i=0; i < keysimage.length; i++) {
+  //  keysimage[i] = loadImage("key" + (i+1) + ".png");
+  //}
 
   // setup audio. player object is initialized when song selected
   minim = new Minim(this);
@@ -51,7 +51,6 @@ void setup() {
 
 void draw() {
 
-
   if (isGameOnStartpage()) {
 
     startpage.display();
@@ -61,15 +60,19 @@ void draw() {
     if (songsync3.isFinished()) {
       player.play();
     }
-    // show camera image, with flipped
+    
     if (cam.available()) {
       cam.read();
-      flip();
+      flip(); 
     }
+    imageMode(CORNER);
     image(cam, 0, 0);
+    
+
     for (int i=0; i < keys.length; i++) {
       keys[i].display();
       keys[i].detectColors();
+      keys[i].noteBeaterLoop();
     }
 
     for (int i=0; i < notes.length; i++) {
@@ -77,21 +80,21 @@ void draw() {
     }
 
     game.ruleLoop();
+    
     game.display();
 
     game.detectDrums();
    
   }
+  
 }
 
 
 void mousePressed() {
   
   if (isGameOnStartpage()) {
-  
-  startpage.clickButton();
+    startpage.clickButton();
   }
-
 }
 
 

@@ -15,10 +15,14 @@ class Note {
   boolean invisible;
   
   // constants
-  int radius = 25;
+  int size = 25;
   
 
   // constructor
+  Note(int lane, float time) {
+    this(lane, (int)time);
+  }
+  
   Note(int lane, int time) {
     this.lane = lane;
     this.time = time;
@@ -37,7 +41,7 @@ class Note {
     if (millis() - songTimer.savedTime-game.starttime > this.time) {
       rectMode(CENTER);
       fill(210, 130, 210);
-      rect(this.xpos, this.ypos, 2*this.radius, this.radius/2);
+      rect(this.xpos, this.ypos, 2*this.size, this.size/2);
       this.ypos += this.speed;
     }
   }
