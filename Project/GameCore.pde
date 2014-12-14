@@ -4,7 +4,8 @@ class GameCore {
   int hp;
   int combo;
   int starttime = 0;
-  boolean end = false;
+  boolean end;
+  boolean clear;
   String song = "";  
 
   // constants: position of lanes and notes
@@ -13,19 +14,22 @@ class GameCore {
   int threshold = 100;
   
   PImage gameover;
-  
+  PImage stageclear;
   // constructor
   GameCore() {
     this.hp = 100;
     this.combo = 0;
-    gameover = loadImage("gameover.png");
+    gameover = loadImage("gameover.jpg");
+    stageclear = loadImage("clear.png");
+    end = false;
+    clear = false;
   }
 
   // create note objects
   void setupNotes(String songname) {
     
     if (songname == "Don't look back in anger") {
-      
+      clear = false;
       end = false;
       song = songname;
       
@@ -206,7 +210,7 @@ class GameCore {
     }
     
     else if (songname == "I love you oh thank you") {
-     
+      clear = false;
       end = false;
       song = songname;
       
@@ -514,7 +518,7 @@ class GameCore {
       notes[255] = new Note(2, 143*d);
       
     } else if (songname == "Get Lucky") {
-      
+      clear = false;
       end = false;
       song = songname;
 
@@ -844,7 +848,28 @@ class GameCore {
 
   // Game rule loops (e.g. check if notes are hit or missed)
   void ruleLoop() {
-   
+    if(song == "Don't look back in anger"){
+      if(millis() - songTimer.savedTime>=100000){
+        clear = true;
+        
+      }
+    }
+    else if(song == "I love you oh thank you"){
+      if(millis() - songTimer.savedTime>=100000){
+        clear = true;
+    
+      }
+    }
+    else if(song == "Get Lucky"){
+      if(millis() - songTimer.savedTime>=80000){
+        clear = true;
+        
+      }
+    }
+     if(game.clear){
+      player.pause();
+      player.rewind();
+    }
     this.noteMissedCheckingLoop();
 
     this.noteHitCheckingLoop();
@@ -900,10 +925,13 @@ class GameCore {
     if (combo != 0) {
       fill(0, 255, 0);
       textSize(30);
-      text("COMBO "+combo, 250, 250);
+      text("COMBO "+combo, 285, 250);
     }
     if(end){
       image(gameover,0,0,width,height);
+    }
+    if(clear){
+      image(stageclear,0,0,width,height);
     }
   }
 

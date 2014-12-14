@@ -21,14 +21,14 @@ class Startpage {
     this.imgs[3]= loadImage("lab_02.png");
     this.imgs[4]= loadImage("poster.png");
     this.imgs[5]= loadImage("poster_01.gif");
-    this.imgs[6]= loadImage("band.png");
+    this.imgs[6]= loadImage("band01.png");
     //this.imgs[7]= loadImage("band_01.png");
     //this.imgs[8]= loadImage("band_02.png");
     this.freePlayButton = new MenuButton("band_01.png", 0, 360);
     this.playAlongButton = new MenuButton("band_02.png", 320, 360);
-    this.song1Button = new SongButton("Don't look back in anger", 1, 320, 120, CENTER);
-    this.song2Button = new SongButton("I love you oh thank you", 2, 320, 195, CENTER);
-    this.song3Button = new SongButton("Get Lucky", 3, 320, 270, CENTER);
+    this.song1Button = new SongButton("dont.png", 1, 320, 95, CENTER);
+    this.song2Button = new SongButton("ilove.png", 2, 320, 240, CENTER);
+    this.song3Button = new SongButton("get.png", 3, 320, 385, CENTER);
   }
 
 
@@ -255,19 +255,20 @@ class MenuButton extends Button {
 
 
 class SongButton extends Button {
-  
+  PImage image;
   String songName;
   int songNumber;
   
-  SongButton(String songName, int songNumber, int xpos, int ypos) {
-    this(songName, songNumber, xpos, ypos, CORNER);
+  SongButton(String songPath, int songNumber, int xpos, int ypos) {
+    this(songPath, songNumber, xpos, ypos, CORNER);
   }
   
-  SongButton(String songName, int songNumber, int xpos, int ypos, int alignMode) {
-    this.songName = songName;
-    this.songNumber = songNumber;
-    this.width = 360;
-    this.height = 50;
+  SongButton(String songPath, int songNumber, int xpos, int ypos, int alignMode) {
+    this.image = loadImage(songPath);
+    //this.songName = songName;
+    //this.songNumber = songNumber;
+    this.width = 300;
+    this.height = 100;
     if (alignMode == CORNER) {
       this.xpos = xpos;
       this.ypos = ypos;
@@ -278,16 +279,17 @@ class SongButton extends Button {
   }
   
   void display() {
-    noStroke();
-    fill(255);
+    noTint();
     if (this.isMouseOver()) {
-      fill(180, 140);
+    tint(204, 147, 76, 80);
     }
-    rectMode(CORNER);
-    rect(this.xpos, this.ypos, this.width, this.height);
-    fill(0);
-    textAlign(CENTER, CENTER);
-    text(this.songName, this.xpos + this.width/2, this.ypos + this.height/2);
+    image(this.image, this.xpos, this.ypos, this.width, this.height);
+    noTint();
+    //rectMode(CORNER);
+    //rect(this.xpos, this.ypos, this.width, this.height);
+    //fill(0);
+    //textAlign(CENTER, CENTER);
+    //text(this.songName, this.xpos + this.width/2, this.ypos + this.height/2);
   }
     
 }

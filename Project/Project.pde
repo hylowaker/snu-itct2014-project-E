@@ -43,7 +43,7 @@ void setup() {
 
   //## combotimer = new Timer(1500); // ##experimental
 
-  songTimer = new Timer(100000);
+  songTimer = new Timer(110000);
 
   startpage = new Startpage();
 }
@@ -80,6 +80,7 @@ void draw() {
     game.display();
 
     game.detectDrums();
+   
   }
 }
 
