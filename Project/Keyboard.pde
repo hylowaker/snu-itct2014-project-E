@@ -1,21 +1,17 @@
 // Keyboard is a note beater class
 
 class Keyboard {
-
-  // coordinates of the keys
-  int xpos;
-  int ypos;
-
+  
   int lane;
+  int xpos, ypos;
   
   PImage image;
   int imagesize;
-  
-  // color to fill
-  //color fillColor;
 
   // key state
   boolean over;
+  boolean[] overStates = new boolean[2];
+  
   HitEffector[] flashers = new HitEffector[5];
   int flasherNumber = 0;
 
@@ -34,14 +30,13 @@ class Keyboard {
     this.ypos = ypos;
     this.image = loadImage(imagePath);
     this.imagesize = 80;
-    //this.fillColor = color(255, 255, 255);
     for (int i=0; i < flashers.length; i++) {
       flashers[i] = new HitEffector(this.xpos, this.ypos, this.radius);
     }
   }
 
 
-  void drumComponentLoop() {
+  void drumComponentLoop() {  // ##### experimental
   }
   
   
@@ -50,11 +45,10 @@ class Keyboard {
   }
 
 
-  void display() {
+  void display() {  // loop
 
     // show keys
     noStroke();
-    //fill(this.fillColor);
     imageMode(CENTER);
     image(this.image, this.xpos, this.ypos, this.imagesize, this.imagesize);
 
@@ -68,7 +62,7 @@ class Keyboard {
   }
   
 
-  void detectColors() {
+  void detectColors() {  // loop
 
     this.over = false;
 
@@ -79,8 +73,8 @@ class Keyboard {
         // if the pixel is in the circle,
         if (this.isIntersected(x, y, this.xpos, this.ypos, this.radius)) {
 
-          stroke(10, 10, 10); 
-          ellipse(x, y, 1, 1); //#####debug
+          //stroke(10, 10, 10); 
+          //ellipse(x, y, 1, 1); //#####debug
 
           // pick the color of the pixel
           color pixC = cam.pixels[y*cam.width + x];
@@ -92,18 +86,13 @@ class Keyboard {
 
             // change state
             this.over = true;
-            if (this.lane == 1 || this.lane == 3) {
-              //this.fillColor = color(255, 0, 0);
-            } else if (this.lane == 2 || this.lane == 4) {
-              //this.fillColor = color(0, 0, 255);
-            }
+            this.pushStates(this.over);       
             return;
           }
         }
       }
     }
-
-    //this.fillColor = color(255, 255, 255);
+    this.pushStates(this.over); 
   }
 
 
@@ -115,7 +104,15 @@ class Keyboard {
       return false;
     }
   }
-
+  
+  boolean isHit() {
+    return !this.overStates[0] && this.overStates[1];
+  }
+  
+  void pushStates(boolean over) {
+    this.overStates[0] = this.overStates[1];
+    this.overStates[1] = over;
+  }
 
   void flash(int accuracy) {
     flashers[this.flasherNumber].accuracy = accuracy;

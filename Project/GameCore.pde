@@ -103,14 +103,13 @@ class GameCore {
     
     for (int i=0; i < keys.length; i++) {
       keys[i].display();
-      keys[i].detectColors();
     }
 
     for (int i=0; i < notes.length; i++) {
       notes[i].display();
     }
     
-    if(game.song != "free") {
+    if (game.song != "free") {
       
     // hp bar
       if (hp >= 60) {
@@ -204,24 +203,23 @@ class GameCore {
 
     // note hit check
     for (int i=0; i < keys.length; i++) {
+      keys[i].detectColors();
+      
       for (int j=0; j < notes.length; j++) {
-
         
-        if (keys[i].lane != notes[j].lane) {
-          continue;
-        }
-
-        int tmpAccu = this.intersectedAccuracy(keys[i], notes[j]);
-
-        if (tmpAccu >= 1) {
-
-          if (keys[i].over) {
-            this.combo++;
-            this.hp = min(this.hp + 2*(tmpAccu - 1), 100);
-            // notes disappear when correctly hit
-            notes[j].hide();
-
-            keys[i].flash(tmpAccu);
+        if (keys[i].lane == notes[j].lane) {
+          
+          int tmpAccu = this.intersectedAccuracy(keys[i], notes[j]);
+          if (tmpAccu >= 1) {
+            //if (keys[i].over) {
+            if (keys[i].isHit()) {
+              this.combo++;
+              this.hp = min(this.hp + 2*(tmpAccu - 1), 100);
+              // notes disappear when correctly hit
+              notes[j].hide();
+  
+              keys[i].flash(tmpAccu);
+            }
           }
         }
       }
@@ -238,9 +236,9 @@ class GameCore {
     }
 
     int tempDist = abs((_key.ypos - _key.imagesize/2 - 20) - _note.ypos);//judge from line and note
-    if (tempDist > 25) {
+    if (tempDist > 30) {
       return 0;
-    } else if (tempDist > 15) {
+    } else if (tempDist > 16) {
       return 1;
     } else if (tempDist > 8) {
       return 2;

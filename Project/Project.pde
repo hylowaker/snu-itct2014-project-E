@@ -63,6 +63,8 @@ void draw() {
    
   }
   
+  //debug.printkeystate(0);
+  
 }
 
 
@@ -83,6 +85,7 @@ boolean isGameOnStartpage() {
 
 
 void keyPressed() {
+  //println("key: <" + key + ">"); println("keyCode: <" + keyCode + ">");
   if (key == 'q') {
     game.pause();
   }
