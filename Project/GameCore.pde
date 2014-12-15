@@ -135,10 +135,13 @@ class GameCore {
     // notes    
     for (int i=0; i < notes.length; i++) {
       // ## experimental feature
-      if (player.position() - this.beatLength*game.beatCount > this.beatSyncValue) {
-        //debug.print("D:" + int(player.position() - this.beatLength*game.beatCount));
-        this.noteResizer = 10;
-        this.beatCount++;
+      try {
+        if (player.position() - this.beatLength*game.beatCount > this.beatSyncValue) {
+          //debug.print("D:" + int(player.position() - this.beatLength*game.beatCount));
+          this.noteResizer = 10;
+          this.beatCount++;
+        }
+      } catch (NullPointerException e) {
       }
       notes[i].display();
     }
