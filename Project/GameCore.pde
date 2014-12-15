@@ -5,8 +5,8 @@ class GameCore {
   int combo;
   int starttime;
 
-  boolean end;
-  boolean clear;
+  //boolean end;
+  //boolean clear;
   
   String song;
   float beatLength;
@@ -21,8 +21,8 @@ class GameCore {
   GameCore() {
     this.hp = 100;
     this.combo = 0;
-    this.end = false;
-    this.clear = false;   
+    //this.end = false;
+    //this.clear = false;   
   }
 
 
@@ -30,23 +30,24 @@ class GameCore {
   void setupSong(String songname) {
     this.song = songname;
     game.setupNotes(songname);
-    player = minim.loadFile(songname + ".mp3", 2048);
     page = 1;
+    if (songname == "free") {return;}
+    player = minim.loadFile(songname + ".mp3", 2048);
     songTimer.start();
     songStartDelayer.start();
   }
 
 
-  // create note objects
   void setupNotes(String songname) {
     
     if (songname != "free") {
       
+      // load text file that contains note information from 'data' folder.
       String[] notemap = loadStrings(song + ".txt");
-      this.starttime = int(notemap[0]);
-      this.beatLength = float(notemap[1]);
-      float multiplier = float(notemap[2]);
-      int numberofnotes = int(notemap[3]);
+      this.starttime = int(notemap[0]);  // 1st line of the txt file
+      this.beatLength = float(notemap[1]);  // 2nd line of the txt file
+      float multiplier = float(notemap[2]);  // 3rd line of the txt file
+      int numberofnotes = int(notemap[3]);  // 4th line of the txt file
       
       notes = new Note[numberofnotes];
       
@@ -55,6 +56,7 @@ class GameCore {
       //debug.print("ML: " + multiplier);
       //debug.print("NL: " + numberofnotes);
       
+      // setup note objects
       int index = 0;
       for (int i = 4; i < notemap.length; i++) {
         String[] tmp = split(notemap[i], '\t');
@@ -66,8 +68,9 @@ class GameCore {
           index++;
         }
       }
+      debug.print("The number of notes : " + index);
       
-    } else if (songname.equals("free")){
+    } else if (songname.equals("free")) {
       
       this.starttime = 0;
       notes = new Note[1];
@@ -93,22 +96,17 @@ class GameCore {
     this.noteMissedCheckingLoop();
     this.noteHitCheckingLoop();
     this.gameOverCheckingLoop();
-    
   }
   
   
   // display and run the game interface components
   void display() {
-    rectMode(CORNER);
     
+    // keys (drums)
     for (int i=0; i < keys.length; i++) {
       keys[i].display();
     }
 
-    for (int i=0; i < notes.length; i++) {
-      notes[i].display();
-    }
-    
     if (game.song != "free") {
       
     // hp bar
@@ -119,6 +117,7 @@ class GameCore {
       } else {
         fill(255, 0, 0);
       }
+    noStroke();
     rectMode(CORNER);
     rect(600, 50, 20, 2*100);
     fill(255);
@@ -130,23 +129,17 @@ class GameCore {
     fill(204, 147, 76);
     rectMode(CORNER);
     rect(0, keys[0].ypos - keys[0].imagesize/2 - 20, width, notes[0].size/2);
+    
+    // notes
+    for (int i=0; i < notes.length; i++) {
+      notes[i].display();
+    }
 
+    // combo streaks
     if (combo != 0) {
       fill(0, 255, 0);
       textSize(30);
       text("COMBO " + combo, 285, 250);
-    }
-    
-    if (this.clear) {
-      page = 0;
-      startpage.pagecount = 6;
-      //image(stageclear, 0, 0, width ,height);
-    }
-    
-    if (this.end) {
-      page = 0;
-      startpage.pagecount = 7;
-      //image(gameover, 0, 0, width, height);
     }
     
   }
@@ -154,30 +147,36 @@ class GameCore {
 
   void gameClearCheckingLoop() {
     
+    boolean clear = false;
+    
     if (this.song == "Don't look back in anger") {
       if (millis() - songTimer.savedTime >= 100000) {
-        this.clear = true;
+        clear = true;
       }
     } else if (this.song == "I love you oh thank you") {
       if (millis() - songTimer.savedTime >= 100000) {
-        this.clear = true;
+        clear = true;
       }
     } else if (this.song == "Get Lucky") {
       if (millis() - songTimer.savedTime >= 80000) {
-        this.clear = true;
+        clear = true;
       }
     }
     
-    if (this.clear) {
+    if (clear) {
       player.close();
+      page = 0;
+      startpage.pagecount = 6;
     }
   }
   
   
   void gameOverCheckingLoop() {
     if (this.hp <= 0) {
-      player.close();     
-      this.end = true;
+      player.close();
+      //this.end = true;
+      page = 0;
+      startpage.pagecount = 7;
     }
   }
   
@@ -210,16 +209,12 @@ class GameCore {
         if (keys[i].lane == notes[j].lane) {
           
           int tmpAccu = this.intersectedAccuracy(keys[i], notes[j]);
-          if (tmpAccu >= 1) {
-            //if (keys[i].over) {
-            if (keys[i].isHit()) {
-              this.combo++;
-              this.hp = min(this.hp + 2*(tmpAccu - 1), 100);
-              // notes disappear when correctly hit
-              notes[j].hide();
-  
-              keys[i].flash(tmpAccu);
-            }
+          if (tmpAccu >= 1 && keys[i].isHit()) {
+            this.combo++;
+            this.hp = min(this.hp + 2*(tmpAccu - 1), 100);
+            // notes disappear when correctly hit
+            notes[j].hide();
+            keys[i].flash(tmpAccu);
           }
         }
       }
@@ -285,14 +280,15 @@ class GameCore {
     
     // drumstick displayer
     try {
+      noStroke();
       ravX = rsumX/rcount;
       ravY = rsumY/rcount;
       fill(255, 0, 0);
-      ellipse(ravX, ravY, 40, 40);
+      ellipse(ravX, ravY, 30, 30);
       bavX = bsumX/bcount;
       bavY = bsumY/bcount;
       fill(0, 0, 255);
-      ellipse(bavX, bavY, 40, 40);
+      ellipse(bavX, bavY, 30, 30);
     } catch (ArithmeticException e) {
       //pass
     }
@@ -319,8 +315,8 @@ class GameCore {
     startpage.pagecount = 4;
     this.hp = 100;
     this.combo = 0;
-    this.end = false;
-    this.clear = false;
+    //this.end = false;
+    //this.clear = false;
   }
   
 }

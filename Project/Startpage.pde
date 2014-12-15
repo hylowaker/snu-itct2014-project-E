@@ -19,62 +19,63 @@ class Startpage {
     this.imgs[8] = loadImage("gameover.jpg");
     this.freePlayButton = new MenuButton("band_01.png", 0, 360);
     this.playAlongButton = new MenuButton("band_02.png", 320, 360);
-    this.song1Button = new SongButton("dont.png", 1, 320, 95, CENTER);
-    this.song2Button = new SongButton("ilove.png", 2, 320, 240, CENTER);
-    this.song3Button = new SongButton("get.png", 3, 320, 385, CENTER);
+    this.song1Button = new SongButton("dont.png", 320, 95, CENTER);
+    this.song2Button = new SongButton("ilove.png", 320, 240, CENTER);
+    this.song3Button = new SongButton("get.png", 320, 385, CENTER);
   }
 
 
   void display() {
     
+    imageMode(CORNER);
     switch (this.pagecount) {
       case 0:
-      image(this.imgs[1], 0, 0);
-      break;
+        image(this.imgs[1], 0, 0);
+        break;
       
       // story images
       case 1:
-      image(this.imgs[0], 0, 0, width, 360);
-      image(this.imgs[2], 0, 360, width, 120);
-      break;
+        image(this.imgs[0], 0, 0, width, 360);
+        image(this.imgs[2], 0, 360, width, 120);
+        break;
       
       case 2:
-      image(this.imgs[0], 0, 0, width, 360);
-      image(this.imgs[3], 0, 360, width, 120);
-      break;
-      
+        image(this.imgs[0], 0, 0, width, 360);
+        image(this.imgs[3], 0, 360, width, 120);
+        break;
+        
       case 3:
-      image(this.imgs[4], 0, 0, width, 360);
-      image(this.imgs[5], 0, 360, width, 120);
-      break;
+        image(this.imgs[4], 0, 0, width, 360);
+        image(this.imgs[5], 0, 360, width, 120);
+        break;
       
       // main menu
       case 4:
-      image(this.imgs[6], 0, 0, width, 360);
-      this.freePlayButton.display();
-      this.playAlongButton.display();
-      break;
+        image(this.imgs[6], 0, 0, width, 360);
+        this.freePlayButton.display();
+        this.playAlongButton.display();
+        break;
       
       // song selecting menu
       case 5:
-      background(52, 56, 41);
-      this.song1Button.display();
-      this.song2Button.display();
-      this.song3Button.display();
-      break;
+        background(52, 56, 41);
+        this.song1Button.display();
+        this.song2Button.display();
+        this.song3Button.display();
+        break;
       
       // game success
       case 6:
-      image(this.imgs[7], 0, 0);
-      break;
+        image(this.imgs[7], 0, 0);
+        break;
       
       // game fail
       case 7:
-      image(this.imgs[8], 0, 0);
-      break;
+        image(this.imgs[8], 0, 0);
+        break;
     
       default:
-      break;
+        break;
     }
   }
 
@@ -87,13 +88,14 @@ class Startpage {
     } else if (this.pagecount == 4) {
       if (this.freePlayButton.isMouseOver()) {
         //player = minim.loadFile("free.mp3", 1000);
-        game.setupNotes("free");
+        game.setupSong("free");
         page = 1;
         //songTimer.start();
       } else if (this.playAlongButton.isMouseOver()) {
         this.nextPage();
       } else {
       }
+      
       
     } else if (this.pagecount == 5) {
       if (this.song1Button.isMouseOver()) {
@@ -152,12 +154,11 @@ class MenuButton extends Button {
   void display() {
     noTint();
     if (this.isMouseOver()) {
-      tint(204, 147, 76, 60);
-      // + mousePressed ?
+      tint(204, 147, 76, 80);
     }
+    imageMode(CORNER);
     image(this.image, this.xpos, this.ypos, this.width, this.height);
-    noTint();
-      
+    noTint();   
   }
   
 }
@@ -165,17 +166,13 @@ class MenuButton extends Button {
 
 class SongButton extends Button {
   PImage image;
-  String songName;
-  int songNumber;
   
-  SongButton(String songPath, int songNumber, int xpos, int ypos) {
-    this(songPath, songNumber, xpos, ypos, CORNER);
+  SongButton(String songPath, int xpos, int ypos) {
+    this(songPath, xpos, ypos, CORNER);
   }
   
-  SongButton(String songPath, int songNumber, int xpos, int ypos, int alignMode) {
+  SongButton(String songPath, int xpos, int ypos, int alignMode) {
     this.image = loadImage(songPath);
-    //this.songName = songName;
-    //this.songNumber = songNumber;
     this.width = 300;
     this.height = 100;
     if (alignMode == CORNER) {
@@ -190,15 +187,11 @@ class SongButton extends Button {
   void display() {
     noTint();
     if (this.isMouseOver()) {
-    tint(204, 147, 76, 80);
+      tint(204, 147, 76, 80);
     }
+    imageMode(CORNER);
     image(this.image, this.xpos, this.ypos, this.width, this.height);
-    noTint();
-    //rectMode(CORNER);
-    //rect(this.xpos, this.ypos, this.width, this.height);
-    //fill(0);
-    //textAlign(CENTER, CENTER);
-    //text(this.songName, this.xpos + this.width/2, this.ypos + this.height/2);
+    noTint();   
   }
-    
+  
 }

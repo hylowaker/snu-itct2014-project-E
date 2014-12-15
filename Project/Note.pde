@@ -39,6 +39,7 @@ class Note {
     }
     
     if (millis() - songTimer.savedTime - game.starttime > this.time) {
+      noStroke();
       rectMode(CENTER);
       fill(210, 130, 210);
       rect(this.xpos, this.ypos, 2*this.size, this.size/2);

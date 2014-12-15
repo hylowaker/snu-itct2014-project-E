@@ -2,8 +2,8 @@ import processing.video.*;
 import ddf.minim.*;
 
 Capture cam;
-AudioPlayer player;
 Minim minim;
+AudioPlayer player;
 
 Keyboard[] keys;
 Note[] notes;
@@ -45,8 +45,11 @@ void draw() {
     
   } else if (!isGameOnStartpage()) {
 
-    if (songStartDelayer.isFinished()) {
-      player.play();
+    try {
+      if (songStartDelayer.isFinished()) {
+        player.play();
+      }
+    } catch (NullPointerException e) {
     }
     
     if (cam.available()) {
@@ -85,7 +88,8 @@ boolean isGameOnStartpage() {
 
 
 void keyPressed() {
-  //println("key: <" + key + ">"); println("keyCode: <" + keyCode + ">");
+  //println("key: <" + key + ">"); println("keyCode: <" + keyCode + ">");s
+  //print(game.song);
   if (key == 'q') {
     game.pause();
   }
