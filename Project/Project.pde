@@ -18,9 +18,9 @@ int page = 0;
 void setup() {
   noStroke();
   size(640, 480);
-  songStartDelayer = new Timer(1000);
+  songStartDelayer = new Timer(2000);
   game = new GameCore();
-
+  
   // setup audio. player object is initialized when song selected
   minim = new Minim(this);
 
@@ -44,13 +44,9 @@ void draw() {
     startpage.display();
     
   } else if (!isGameOnStartpage()) {
-
-    try {
       if (songStartDelayer.isFinished()) {
-        player.play();
+        try { player.play(); } catch (NullPointerException e) {}
       }
-    } catch (NullPointerException e) {
-    }
     
     if (cam.available()) {
       cam.read();
@@ -62,7 +58,7 @@ void draw() {
     game.ruleLoop(); 
     game.display();
 
-    game.detectDrumsticks();
+    //game.detectDrumsticks();
    
   }
   
@@ -111,19 +107,19 @@ void keyPressed() {
   
   if (game.song == "free") {
     if (key == '1') {
-      Note add = new Note(1, millis() - songTimer.savedTime-game.starttime);
+      Note add = new Note(1, 0);
       notes = (Note[])append(notes, add);
     }
     if (key == '2') {
-      Note add = new Note(2, millis() - songTimer.savedTime-game.starttime);
+      Note add = new Note(2, 0);
       notes = (Note[])append(notes, add);
     }
     if (key == '3') {
-      Note add = new Note(3, millis() - songTimer.savedTime-game.starttime);
+      Note add = new Note(3, 0);
       notes = (Note[])append(notes, add);
     }
     if (key == '4') {
-      Note add = new Note(4, millis() - songTimer.savedTime-game.starttime);
+      Note add = new Note(4, 0);
       notes = (Note[])append(notes, add);
     }
   }

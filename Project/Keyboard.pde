@@ -13,6 +13,8 @@ class Keyboard {
   boolean over;
   boolean[] overStates = new boolean[2];
   
+  AudioPlayer drumsound;
+  
   HitEffector[] waves = new HitEffector[5];
   int waveNumber = 0;
   BeatEffector[] flashers = new BeatEffector[2];
@@ -33,6 +35,9 @@ class Keyboard {
     this.ypos = ypos;
     this.image = loadImage(imagePath);
     this.imagesize = 80;
+    this.drumsound = minim.loadFile("DrumSoundSample_"+this.lane+".mp3");
+    float tempPan = (this.lane == 2 | this.lane == 3) ? 0 : map(this.lane, 1, 4, -1, 1);
+    this.drumsound.setPan(tempPan);
     for (int i=0; i < waves.length; i++) {
       waves[i] = new HitEffector(this.lane, this.xpos, this.ypos);
     }
@@ -60,10 +65,18 @@ class Keyboard {
     imageMode(CENTER);
     image(this.image, this.xpos, this.ypos, this.imagesize + this.imageresizer, this.imagesize + this.imageresizer);
 
-    // show waves (HitEffector)
+    // show waves (HitEffector) and play drum sound
     if (this.isHit()) {
       this.imageresizer = 30;
       this.wave();
+      //this.drumsound = minim.loadFile("DrumSoundSample_"+this.lane+".mp3"); 
+      this.drumsound.rewind();
+      this.drumsound.play();
+      if (this.lane == 4) {  // autoplay kicksound when cymbal hit
+        keys[2].imageresizer = 30;
+        keys[2].drumsound.rewind();
+        keys[2].drumsound.play();
+      }
     }
     for (int i=0; i < waves.length; i++) {
       waves[i].display();

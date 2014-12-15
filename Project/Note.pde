@@ -14,6 +14,7 @@ class Note {
   // is the note is visible?
   boolean invisible;
   
+  PImage noteimg;
   int size = 25;
   int resizer = 0;
   
@@ -26,7 +27,7 @@ class Note {
   Note(int lane, int time) {
     this.lane = lane;
     this.time = time;
-    
+    this.noteimg = loadImage("note.png");
     this.xpos = game.lanePos + (this.lane - 1)*game.laneGap;
     this.ypos = 20;
     this.speed = 3;
@@ -38,12 +39,19 @@ class Note {
       return;
     }
     
-    if (millis() - songTimer.savedTime - game.starttime > this.time) {
+    
+    int timepassed;
+    timepassed = millis() - songTimer.savedTime;
+    //try { timepassed = player.position(); } catch (NullPointerException e) { timepassed = 1; }
+    if (timepassed - game.starttime > this.time) {
       noStroke();
-      rectMode(CENTER);
-      fill(210, 130, 210);
-      rect(this.xpos, this.ypos, 2*this.size + game.noteResizer, this.size/2 + game.noteResizer);
+      //rectMode(CENTER);
+      //fill(210, 130, 210);
+      //rect(this.xpos, this.ypos, 2*this.size + game.noteResizer, this.size/2 + game.noteResizer);
+      imageMode(CENTER);
+      image(noteimg, this.xpos, this.ypos, 2*this.size + game.noteResizer, this.size/2 + game.noteResizer);
       this.ypos += this.speed;
+      //this.ypos = (player.position() - game.starttime - this.time)*this.speed/16;
     }
   }
   

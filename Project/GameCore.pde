@@ -17,7 +17,7 @@ class GameCore {
   // constants: position of lanes and notes, drumstick detecting threshold
   int lanePos = 90;
   int laneGap = 150;
-  int threshold = 100;
+  int threshold = 70;
 
   
   // constructor
@@ -33,7 +33,7 @@ class GameCore {
     /* ### experimental */  if (this.song == "Don't look back in anger") {this.beatSyncValue = 1100;} else if (this.song == "I love you oh thank you") {this.beatSyncValue = 1000;} else if (this.song == "Get Lucky") {this.beatSyncValue = 1000;}
     game.setupNotes(songname);
     page = 1;
-    if (songname == "free") {return;}
+    if (songname == "free") { return; }
     player = minim.loadFile(songname + ".mp3", 2048);
     songTimer.start();
     songStartDelayer.start();
@@ -176,7 +176,7 @@ class GameCore {
     }
     
     if (clear) {
-      player.close();
+      try { player.close(); } catch (NullPointerException e) {}
       page = 0;
       startpage.pagecount = 6;
     }
@@ -185,7 +185,7 @@ class GameCore {
   
   void gameOverCheckingLoop() {
     if (this.hp <= 0) {
-      player.close();
+      try { player.close(); } catch (NullPointerException e) {}
       page = 0;
       startpage.pagecount = 7;
     }
@@ -198,12 +198,14 @@ class GameCore {
 
       // if the note passes bottom of the screen:
       if (notes[i].ypos >= height - 50) {
-
-        // hp decreases
-        this.hp = max(this.hp - 6, 0);
-        this.combo = 0;
+        
         // notes disappear when missed
         notes[i].hide();
+        // hp decreases (except on free mode)
+        if (this.song != "free") {
+          this.hp = max(this.hp - 6, 0);
+          this.combo = 0;
+        }     
       }
     }
   }
@@ -242,11 +244,11 @@ class GameCore {
     }
 
     int tempDist = abs((_key.ypos - _key.imagesize/2 - 20) - _note.ypos);//judge from line and note
-    if (tempDist > 30) {
+    if (tempDist > 34) {
       return 0;
-    } else if (tempDist > 16) {
+    } else if (tempDist > 23) {
       return 1;
-    } else if (tempDist > 8) {
+    } else if (tempDist > 11) {
       return 2;
     } else {
       return 3;
@@ -308,20 +310,16 @@ class GameCore {
   
   void pause() {
     noLoop();
-    player.pause();
+    try { player.pause(); } catch (NullPointerException e) {}
   }
   
   void resume() {
     loop();
-    player.play();
+    try { player.play(); } catch (NullPointerException e) {}
   }
   
   void back() {
-    try {
-      player.close();
-    } catch (NullPointerException e) {
-      //pass
-    }
+    try { player.close(); } catch (NullPointerException e) {}
     page = 0;
     startpage.pagecount = 4;
     this.hp = 100;
