@@ -3,27 +3,30 @@ class GameCore {
   // game states
   int hp;
   int combo;
+  int maxcombo;  // ###experimental
+  int score;  // ###experimental
+  float scorePercentage;  // ###experimental
   int starttime;
-
-  //boolean end;
-  //boolean clear;
   
   String song;
   float beatLength;
+  int numberofnotes;
   int beatCount = 0;  // ###experimental
   int beatSyncValue;  // ###experimental
   int noteResizer;    // ###experimental
 
-  // constants: position of lanes and notes, drumstick detecting threshold
+  // position of lanes and notes, drumstick detecting threshold, PFont (combo displayer)
   int lanePos = 90;
   int laneGap = 150;
   int threshold = 70;
+  PFont combofont;
 
   
   // constructor
   GameCore() {
     this.hp = 100;
     this.combo = 0;
+    this.combofont = createFont("Arial", 30);
   }
 
 
@@ -49,7 +52,7 @@ class GameCore {
       this.starttime = int(notemap[0]);  // 1st line of the txt file
       this.beatLength = float(notemap[1]);  // 2nd line of the txt file
       float multiplier = float(notemap[2]);  // 3rd line of the txt file
-      int numberofnotes = int(notemap[3]);  // 4th line of the txt file
+      this.numberofnotes = int(notemap[3]);  // 4th line of the txt file
       
       notes = new Note[numberofnotes];
       
@@ -151,6 +154,7 @@ class GameCore {
     if (combo != 0) {
       fill(0, 255, 0);
       textSize(30);
+      textFont(this.combofont);
       text("COMBO " + combo, 285, 250);
     }
     
@@ -162,21 +166,26 @@ class GameCore {
     boolean clear = false;
     
     if (this.song == "Don't look back in anger") {
-      if (millis() - songTimer.savedTime >= 100000) {
+      if (millis() - songTimer.savedTime >= 106000) {
         clear = true;
       }
     } else if (this.song == "I love you oh thank you") {
-      if (millis() - songTimer.savedTime >= 100000) {
+      if (millis() - songTimer.savedTime >= 105000) {
         clear = true;
       }
     } else if (this.song == "Get Lucky") {
-      if (millis() - songTimer.savedTime >= 80000) {
+      if (millis() - songTimer.savedTime >= 85000) {
         clear = true;
       }
     }
     
     if (clear) {
       try { player.close(); } catch (NullPointerException e) {}
+      this.scorePercentage = (float)this.score / (3*this.numberofnotes);
+      debug.print(""+this.score);
+      debug.print(""+this.numberofnotes);
+      debug.print("Your score : " + this.scorePercentage);  // ###### experimental
+      debug.print("Max combo : " + this.maxcombo);
       page = 0;
       startpage.pagecount = 6;
     }
@@ -223,7 +232,10 @@ class GameCore {
           
           int tmpAccu = this.intersectedAccuracy(keys[i], notes[j]);
           if (tmpAccu >= 1 && keys[i].isHit()) {
-            this.combo++;
+            this.score += tmpAccu;
+            //debug.print("CS"+this.score);
+            this.combo++;    //### performance issue!
+            this.maxcombo = max(this.combo, this.maxcombo);
             this.hp = min(this.hp + 2*(tmpAccu - 1), 100);
             // notes disappear when correctly hit
             notes[j].hide();
@@ -324,6 +336,9 @@ class GameCore {
     startpage.pagecount = 4;
     this.hp = 100;
     this.combo = 0;
+    this.maxcombo = 0;
+    this.score = 0;
+    this.scorePercentage = 0;
     this.beatCount = 0;
   }
   

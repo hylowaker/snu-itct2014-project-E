@@ -131,7 +131,7 @@ class Keyboard {
 
   boolean isIntersected(int x1, int y1, int x2, int y2, int r) {
     float tmpDist = dist(x1, y1, x2, y2);
-    if (tmpDist < r && tmpDist > 0.625*r) {
+    if (tmpDist < r && tmpDist > 0.375*r) {
       return true;
     } else {
       return false;

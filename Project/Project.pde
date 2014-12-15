@@ -86,6 +86,7 @@ boolean isGameOnStartpage() {
 void keyPressed() {
   //println("key: <" + key + ">"); println("keyCode: <" + keyCode + ">");s
   //print(game.song);
+  
   if (key == 'q') {
     game.pause();
   }
