@@ -10,6 +10,9 @@ class GameCore {
   
   String song;
   float beatLength;
+  int beatCount = 0;  // ###experimental
+  int beatSyncValue;  // ###experimental
+  int noteResizer;    // ###experimental
 
   // constants: position of lanes and notes, drumstick detecting threshold
   int lanePos = 90;
@@ -21,14 +24,13 @@ class GameCore {
   GameCore() {
     this.hp = 100;
     this.combo = 0;
-    //this.end = false;
-    //this.clear = false;   
   }
 
 
   // setup the song and start the game
   void setupSong(String songname) {
     this.song = songname;
+    /* ### experimental */  if (this.song == "Don't look back in anger") {this.beatSyncValue = 1100;} else if (this.song == "I love you oh thank you") {this.beatSyncValue = 1000;} else if (this.song == "Get Lucky") {this.beatSyncValue = 1000;}
     game.setupNotes(songname);
     page = 1;
     if (songname == "free") {return;}
@@ -130,10 +132,17 @@ class GameCore {
     rectMode(CORNER);
     rect(0, keys[0].ypos - keys[0].imagesize/2 - 20, width, notes[0].size/2);
     
-    // notes
+    // notes    
     for (int i=0; i < notes.length; i++) {
+      // ## experimental feature
+      if (player.position() - this.beatLength*game.beatCount > this.beatSyncValue) {
+        //debug.print("D:" + int(player.position() - this.beatLength*game.beatCount));
+        this.noteResizer = 10;
+        this.beatCount++;
+      }
       notes[i].display();
     }
+    this.noteResizer = (this.noteResizer > 0) ? this.noteResizer - 1 : 0;
 
     // combo streaks
     if (combo != 0) {
@@ -174,7 +183,6 @@ class GameCore {
   void gameOverCheckingLoop() {
     if (this.hp <= 0) {
       player.close();
-      //this.end = true;
       page = 0;
       startpage.pagecount = 7;
     }
@@ -315,8 +323,7 @@ class GameCore {
     startpage.pagecount = 4;
     this.hp = 100;
     this.combo = 0;
-    //this.end = false;
-    //this.clear = false;
+    this.beatCount = 0;
   }
   
 }

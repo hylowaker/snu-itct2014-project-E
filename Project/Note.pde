@@ -14,8 +14,8 @@ class Note {
   // is the note is visible?
   boolean invisible;
   
-  // constants
   int size = 25;
+  int resizer = 0;
   
 
   // constructor
@@ -42,7 +42,7 @@ class Note {
       noStroke();
       rectMode(CENTER);
       fill(210, 130, 210);
-      rect(this.xpos, this.ypos, 2*this.size, this.size/2);
+      rect(this.xpos, this.ypos, 2*this.size + game.noteResizer, this.size/2 + game.noteResizer);
       this.ypos += this.speed;
     }
   }
