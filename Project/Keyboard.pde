@@ -36,7 +36,7 @@ class Keyboard {
     this.image = loadImage(imagePath);
     this.imagesize = 80;
     this.drumsound = minim.loadFile("DrumSoundSample_"+this.lane+".mp3");
-    float tempPan = (this.lane == 2 | this.lane == 3) ? 0 : map(this.lane, 1, 4, -1, 1);
+    float tempPan = (this.lane == 2 | this.lane == 3) ? 0 : map(this.lane, 1, 4, -0.8, 0.8);
     this.drumsound.setPan(tempPan);
     for (int i=0; i < waves.length; i++) {
       waves[i] = new HitEffector(this.lane, this.xpos, this.ypos);

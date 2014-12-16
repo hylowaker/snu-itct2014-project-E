@@ -155,7 +155,7 @@ class GameCore {
       fill(0, 255, 0);
       textSize(30);
       textFont(this.combofont);
-      text("COMBO " + combo, 285, 250);
+      text("COMBO " + combo, 245, 250);
     }
     
   }
@@ -170,7 +170,7 @@ class GameCore {
         clear = true;
       }
     } else if (this.song == "I love you oh thank you") {
-      if (millis() - songTimer.savedTime >= 105000) {
+      if (millis() - songTimer.savedTime >= 110000) {
         clear = true;
       }
     } else if (this.song == "Get Lucky") {
@@ -186,6 +186,9 @@ class GameCore {
       debug.print(""+this.numberofnotes);
       debug.print("Your score : " + this.scorePercentage);  // ###### experimental
       debug.print("Max combo : " + this.maxcombo);
+      
+      
+      
       page = 0;
       startpage.pagecount = 6;
     }

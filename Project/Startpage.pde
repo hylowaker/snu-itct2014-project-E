@@ -3,7 +3,7 @@
 class Startpage {
   PImage [] imgs = new PImage[9]; 
   int pagecount = 0;
-   
+
   MenuButton freePlayButton, playAlongButton;
   SongButton song1Button, song2Button, song3Button;
 
@@ -26,65 +26,68 @@ class Startpage {
 
 
   void display() {
-    
+
     imageMode(CORNER);
     switch (this.pagecount) {
-      case 0:
-        image(this.imgs[1], 0, 0);
-        break;
-      
+    case 0:
+      image(this.imgs[1], 0, 0);
+      break;
+
       // story images
-      case 1:
-        image(this.imgs[0], 0, 0, width, 360);
-        image(this.imgs[2], 0, 360, width, 120);
-        break;
-      
-      case 2:
-        image(this.imgs[0], 0, 0, width, 360);
-        image(this.imgs[3], 0, 360, width, 120);
-        break;
-        
-      case 3:
-        image(this.imgs[4], 0, 0, width, 360);
-        image(this.imgs[5], 0, 360, width, 120);
-        break;
-      
+    case 1:
+      image(this.imgs[0], 0, 0, width, 360);
+      image(this.imgs[2], 0, 360, width, 120);
+      break;
+
+    case 2:
+      image(this.imgs[0], 0, 0, width, 360);
+      image(this.imgs[3], 0, 360, width, 120);
+      break;
+
+    case 3:
+      image(this.imgs[4], 0, 0, width, 360);
+      image(this.imgs[5], 0, 360, width, 120);
+      break;
+
       // main menu
-      case 4:
-        image(this.imgs[6], 0, 0, width, 360);
-        this.freePlayButton.display();
-        this.playAlongButton.display();
-        break;
-      
+    case 4:
+      image(this.imgs[6], 0, 0, width, 360);
+      this.freePlayButton.display();
+      this.playAlongButton.display();
+      break;
+
       // song selecting menu
-      case 5:
-        background(52, 56, 41);
-        this.song1Button.display();
-        this.song2Button.display();
-        this.song3Button.display();
-        break;
-      
+    case 5:
+      background(52, 56, 41);
+      this.song1Button.display();
+      this.song2Button.display();
+      this.song3Button.display();
+      break;
+
       // game success
-      case 6:
-        image(this.imgs[7], 0, 0);
-        break;
-      
+    case 6:
+      image(this.imgs[7], 0, 0);
+      fill(255);
+      textSize(25);
+      text("SCORE : "+int(100*game.scorePercentage), 20, 50);
+      text("MAXCOMBO : "+game.maxcombo, 20, 90);
+      break;
+
       // game fail
-      case 7:
-        image(this.imgs[8], 0, 0);
-        break;
-    
-      default:
-        break;
+    case 7:
+      image(this.imgs[8], 0, 0);
+      break;
+
+    default:
+      break;
     }
   }
 
 
   void clickButton() {
-    
+
     if (this.pagecount < 4) {
       this.nextPage();
-      
     } else if (this.pagecount == 4) {
       if (this.freePlayButton.isMouseOver()) {
         //player = minim.loadFile("free.mp3", 1000);
@@ -95,8 +98,6 @@ class Startpage {
         this.nextPage();
       } else {
       }
-      
-      
     } else if (this.pagecount == 5) {
       if (this.song1Button.isMouseOver()) {
         game.setupSong("Don't look back in anger");
@@ -106,14 +107,12 @@ class Startpage {
         game.setupSong("Get Lucky");
       } else {
       }
-        
     } else if (this.pagecount == 6 || this.pagecount == 7) {
       game.back();
     }
-    
   }
-  
-  
+
+
   void nextPage() {
     if (this.pagecount < 5) {
       this.pagecount += 1;
@@ -124,10 +123,10 @@ class Startpage {
 
 
 class Button {
-  
+
   int xpos, ypos;
   int width, height;
-  
+
   boolean isMouseOver() {
     if (mouseX > this.xpos && mouseY > this.ypos && mouseX < this.xpos + this.width && mouseY < this.ypos + this.height) {
       return true;
@@ -135,14 +134,13 @@ class Button {
       return false;
     }
   }
-  
 }
 
 
 class MenuButton extends Button {
-  
+
   PImage image;
-  
+
   MenuButton(String imagePath, int xpos, int ypos) {
     this.image = loadImage(imagePath);
     this.xpos = xpos;
@@ -150,7 +148,7 @@ class MenuButton extends Button {
     this.width = 320;
     this.height = 120;
   }
-  
+
   void display() {
     noTint();
     if (this.isMouseOver()) {
@@ -158,19 +156,18 @@ class MenuButton extends Button {
     }
     imageMode(CORNER);
     image(this.image, this.xpos, this.ypos, this.width, this.height);
-    noTint();   
+    noTint();
   }
-  
 }
 
 
 class SongButton extends Button {
   PImage image;
-  
+
   SongButton(String songPath, int xpos, int ypos) {
     this(songPath, xpos, ypos, CORNER);
   }
-  
+
   SongButton(String songPath, int xpos, int ypos, int alignMode) {
     this.image = loadImage(songPath);
     this.width = 300;
@@ -183,7 +180,7 @@ class SongButton extends Button {
       this.ypos = ypos - this.height/2;
     }
   }
-  
+
   void display() {
     noTint();
     if (this.isMouseOver()) {
@@ -191,7 +188,6 @@ class SongButton extends Button {
     }
     imageMode(CORNER);
     image(this.image, this.xpos, this.ypos, this.width, this.height);
-    noTint();   
+    noTint();
   }
-  
 }
