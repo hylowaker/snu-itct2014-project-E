@@ -26,60 +26,67 @@ class Startpage {
 
 
   void display() {
+    PFont scorefont = loadFont("HoonJumboB-48.vlw");
 
     imageMode(CORNER);
     switch (this.pagecount) {
-    case 0:
-      image(this.imgs[1], 0, 0);
-      break;
-
-      // story images
-    case 1:
-      image(this.imgs[0], 0, 0, width, 360);
-      image(this.imgs[2], 0, 360, width, 120);
-      break;
-
-    case 2:
-      image(this.imgs[0], 0, 0, width, 360);
-      image(this.imgs[3], 0, 360, width, 120);
-      break;
-
-    case 3:
-      image(this.imgs[4], 0, 0, width, 360);
-      image(this.imgs[5], 0, 360, width, 120);
-      break;
-
-      // main menu
-    case 4:
-      image(this.imgs[6], 0, 0, width, 360);
-      this.freePlayButton.display();
-      this.playAlongButton.display();
-      break;
-
-      // song selecting menu
-    case 5:
-      background(52, 56, 41);
-      this.song1Button.display();
-      this.song2Button.display();
-      this.song3Button.display();
-      break;
-
-      // game success
-    case 6:
-      image(this.imgs[7], 0, 0);
-      fill(255);
-      textSize(25);
-      text("SCORE : "+int(100*game.scorePercentage), 20, 50);
-      text("MAXCOMBO : "+game.maxcombo, 20, 90);
-      break;
-
-      // game fail
-    case 7:
-      image(this.imgs[8], 0, 0);
-      break;
-
-    default:
-      break;
+      case 0:
+        image(this.imgs[1], 0, 0);
+        break;
+  
+        // story images
+      case 1:
+        image(this.imgs[0], 0, 0, width, 360);
+        image(this.imgs[2], 0, 360, width, 120);
+        break;
+  
+      case 2:
+        image(this.imgs[0], 0, 0, width, 360);
+        image(this.imgs[3], 0, 360, width, 120);
+        break;
+  
+      case 3:
+        image(this.imgs[4], 0, 0, width, 360);
+        image(this.imgs[5], 0, 360, width, 120);
+        break;
+  
+        // main menu
+      case 4:
+        image(this.imgs[6], 0, 0, width, 360);
+        this.freePlayButton.display();
+        this.playAlongButton.display();
+        break;
+  
+        // song selecting menu
+      case 5:
+        background(52, 56, 41);
+        this.song1Button.display();
+        this.song2Button.display();
+        this.song3Button.display();
+        break;
+  
+        // game success
+      case 6:
+        image(this.imgs[7], 0, 0);
+        fill(224, 167, 96);
+        textAlign(CENTER, TOP);
+        textFont(scorefont, 18);
+        text("SCORE", 60, 30);
+        text("MAXCOMBO", 190, 30);
+        textFont(scorefont, 25);
+        if (game.scorePercentage == 1.0) { fill(250, 230, 100); }
+        text(String.format("%.0f%%", 100*game.scorePercentage ), 60, 55); fill(224, 167, 96);
+        if (game.maxcombo == game.numberofnotes) { fill(250, 230, 100); }
+        text(String.format("%d / %d", game.maxcombo, game.numberofnotes), 190, 55); fill(224, 167, 96);
+        break;
+  
+        // game fail
+      case 7:
+        image(this.imgs[8], 0, 0);
+        break;
+  
+      default:
+        break;
     }
   }
 
@@ -138,7 +145,6 @@ class Button {
 
 
 class MenuButton extends Button {
-
   PImage image;
 
   MenuButton(String imagePath, int xpos, int ypos) {

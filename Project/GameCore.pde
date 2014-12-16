@@ -13,7 +13,7 @@ class GameCore {
   int numberofnotes;
   int beatCount = 0;  // ###experimental
   int beatSyncValue;  // ###experimental
-  int noteResizer;    // ###experimental
+  int beatVisualizer;    // ###experimental
   
   int LANE_POS = 90;
   int LANE_GAP = 150;
@@ -24,7 +24,7 @@ class GameCore {
   GameCore() {
     this.hp = 100;
     this.combo = 0;
-    this.combofont = createFont("Arial", 30);
+    this.combofont = loadFont("HoonJumboB-48.vlw");
   }
 
 
@@ -128,10 +128,14 @@ class GameCore {
     }
     
     // note beater bar
-    noStroke();
-    fill(204, 147, 76);
-    rectMode(CORNER);
-    rect(0, keys[0].ypos - keys[0].imagesize/2 - 20, width, notes[0].size/2);
+    //noStroke();
+    //fill(244, 160, 90, 145 + 10*this.beatVisualizer);
+    //rectMode(CORNER);
+    //rect(0, keys[0].ypos - keys[0].imagesize/2 - 20, width, notes[0].size/2);
+    for (int i=0; i < notes[0].size/2; i++) {
+      stroke(234, 170, 90, 105 + 150*4*abs((int)notes[0].size/4 - i)/notes[0].size);
+      line(0, keys[0].ypos - keys[0].imagesize/2 - 20 + i, width, keys[0].ypos - keys[0].imagesize/2 - 20 + i);
+    }
     
     // notes    
     for (int i=0; i < notes.length; i++) {
@@ -139,21 +143,24 @@ class GameCore {
       try {
         if (player.position() - this.beatLength*game.beatCount > this.beatSyncValue) {
           //debug.print("D:" + int(player.position() - this.beatLength*game.beatCount));
-          this.noteResizer = 11;
+          this.beatVisualizer = 10;
           this.beatCount++;
         }
       } catch (NullPointerException e) {
       }
       notes[i].display();
     }
-    this.noteResizer = (this.noteResizer > 0) ? this.noteResizer - 1 : 0;
+    this.beatVisualizer = (this.beatVisualizer > 0) ? this.beatVisualizer - 1 : 0;
 
     // combo streaks
     if (combo != 0) {
-      fill(0, 255, 0);
-      textSize(30);
+      fill(244, 160, 90, 95 + 16*this.beatVisualizer);
       textFont(this.combofont);
-      text("COMBO " + combo, 245, 250);
+      textAlign(CENTER);
+      textSize(18);
+      text("COMBO", 320, 210);
+      textSize(34);
+      text("" + combo, 320, 250);
     }
     
   }

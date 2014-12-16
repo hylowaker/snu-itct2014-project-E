@@ -69,11 +69,10 @@ class Keyboard {
     if (this.isHit()) {
       this.imageresizer = 30;
       this.wave();
-      //this.drumsound = minim.loadFile("DrumSoundSample_"+this.lane+".mp3"); 
       this.drumsound.rewind();
       this.drumsound.play();
       if (this.lane == 4) {  // autoplay kicksound when cymbal hit
-        keys[2].imageresizer = 30;
+        keys[2].imageresizer = 16;
         keys[2].drumsound.rewind();
         keys[2].drumsound.play();
       }
@@ -110,10 +109,10 @@ class Keyboard {
           // pick the color of the pixel
           color pixC = cam.pixels[y*cam.width + x];
           float detect1 = red(pixC) - 0.5*green(pixC)- 0.5*blue(pixC); // detect red
-          float detect2 = blue(pixC) - 0.5*green(pixC)- 0.5*red(pixC); // detect blue
+          //float detect2 = blue(pixC) - 0.5*green(pixC)- 0.5*red(pixC); // detect blue // disabled
         
           // if the color of the pixel is red or blue enough:
-          if (detect1 > this.threshold || detect2 > this.threshold) {
+          if (detect1 > this.threshold /* || detect2 > this.threshold */ ) {
 
             // change state
             this.over = true;
@@ -233,26 +232,26 @@ class BeatEffector extends HitEffector {
     }
     
     color c1, c2;
-    switch (this.accuracy) { 
-    case 1: 
-      c1 = color(70, 70, 180, 190); 
-      c2 = color(c1, 0);
-      //OK
-      break; 
-    case 2: 
-      c1 = color(200, 60, 60, 230);
-      c2 = color(c1, 0);
-      //GOOD 
-      break; 
-    case 3: 
-      c1 = (this.framesPassed%4 <= 1) ? color(250, 230, 100) : color (244, 160, 90); 
-      c2 = color(c1, 0);
-      //COOL
-      break; 
-    default: 
-      c1 = color(0, 0, 0);
-      c2 = c1;
-      break;
+    switch (this.accuracy) {
+      case 1: 
+        c1 = color(76, 76, 170, 190); 
+        c2 = color(c1, 0);
+        //OK
+        break; 
+      case 2: 
+        c1 = color(200, 60, 60, 230);
+        c2 = color(c1, 0);
+        //GOOD 
+        break; 
+      case 3: 
+        c1 = (this.framesPassed%4 <= 1) ? color(250, 230, 100) : color (244, 160, 90); 
+        c2 = color(c1, 0);
+        //COOL
+        break; 
+      default: 
+        c1 = color(0, 0, 0);
+        c2 = c1;
+        break;
     }
     this.setGradient(this.xpos, this.ypos - 260, 2.1*this.size, 260, c2, c1, Y_AXIS);
     this.framesPassed += 1;

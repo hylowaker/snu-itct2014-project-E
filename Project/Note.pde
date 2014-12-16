@@ -53,7 +53,7 @@ class Note {
       //fill(210, 130, 210);
       //rect(this.xpos, this.ypos, 2*this.size + game.noteResizer, this.size/2 + game.noteResizer);
       imageMode(CENTER);
-      image(noteimg, this.xpos, this.ypos, 2*this.size + game.noteResizer, this.size/2 + game.noteResizer);
+      image(noteimg, this.xpos, this.ypos, 2*this.size + game.beatVisualizer, this.size/2 + game.beatVisualizer);
       this.ypos += this.speed;
       //this.ypos = (player.position() - game.starttime - this.time)*this.speed/16;
     }

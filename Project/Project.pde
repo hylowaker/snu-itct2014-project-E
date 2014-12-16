@@ -87,12 +87,7 @@ void keyPressed() {
   //println("key: <" + key + ">"); println("keyCode: <" + keyCode + ">");s
   //print(game.song);
   
-  if (key == 'q') {
-    game.pause();
-  }
-  if (key == 'w') {
-    game.resume();
-  }
+
   if (key == 'f') {//cheat
     game.hp = 100;
   }
@@ -105,7 +100,7 @@ void keyPressed() {
   if (key == 'b') {//back page
     startpage.pagecount--;
   }
-  
+
   if (game.song == "free") {
     if (key == '1') {
       Note add = new Note(1, 0);
