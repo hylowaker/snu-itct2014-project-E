@@ -175,7 +175,7 @@ class GameCore {
         clear = true;
       }
     } else if (this.song == "I love you oh thank you") {
-      if (millis() - songTimer.savedTime >= 110000) {
+      if (millis() - songTimer.savedTime >= 115000) {
         clear = true;
       }
     } else if (this.song == "Get Lucky") {
