@@ -14,14 +14,12 @@ class GameCore {
   int beatCount = 0;  // ###experimental
   int beatSyncValue;  // ###experimental
   int noteResizer;    // ###experimental
-
-  // position of lanes and notes, drumstick detecting threshold, PFont (combo displayer)
-  int lanePos = 90;
-  int laneGap = 150;
-  int threshold = 70;
-  PFont combofont;
-
   
+  int LANE_POS = 90;
+  int LANE_GAP = 150;
+  PFont combofont;
+  //int threshold = 70;
+
   // constructor
   GameCore() {
     this.hp = 100;
@@ -89,7 +87,7 @@ class GameCore {
   // create key objects
   void setupKeyboards() {
     for (int i=0; i < keys.length; i++) {
-      keys[i] = new Keyboard(i+1, this.lanePos + i*this.laneGap, 420);
+      keys[i] = new Keyboard(i+1, this.LANE_POS + i*this.LANE_GAP, 420);
     }
   }
 
@@ -141,7 +139,7 @@ class GameCore {
       try {
         if (player.position() - this.beatLength*game.beatCount > this.beatSyncValue) {
           //debug.print("D:" + int(player.position() - this.beatLength*game.beatCount));
-          this.noteResizer = 10;
+          this.noteResizer = 11;
           this.beatCount++;
         }
       } catch (NullPointerException e) {
@@ -237,7 +235,7 @@ class GameCore {
           if (tmpAccu >= 1 && keys[i].isHit()) {
             this.score += tmpAccu;
             //debug.print("CS"+this.score);
-            this.combo++;    //### performance issue!
+            this.combo++;
             this.maxcombo = max(this.combo, this.maxcombo);
             this.hp = min(this.hp + 2*(tmpAccu - 1), 100);
             // notes disappear when correctly hit
@@ -259,9 +257,9 @@ class GameCore {
     }
 
     int tempDist = abs((_key.ypos - _key.imagesize/2 - 20) - _note.ypos);//judge from line and note
-    if (tempDist > 34) {
+    if (tempDist > 33) {
       return 0;
-    } else if (tempDist > 23) {
+    } else if (tempDist > 22) {
       return 1;
     } else if (tempDist > 11) {
       return 2;
@@ -272,6 +270,7 @@ class GameCore {
   
   
   // detect each of red, blue sticks and display on the screen
+  /* DEPRECATED
   void detectDrumsticks() {
     int rcount = 0;
     int rsumX = 0;
@@ -321,6 +320,7 @@ class GameCore {
       //pass
     }
   }
+  */
   
   
   void pause() {

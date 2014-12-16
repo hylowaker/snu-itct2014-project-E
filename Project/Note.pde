@@ -25,12 +25,16 @@ class Note {
   }
   
   Note(int lane, int time) {
+    this(lane, time, 3);
+  }
+  
+  Note(int lane, int time, int speed) {
     this.lane = lane;
     this.time = time;
     this.noteimg = loadImage("note.png");
-    this.xpos = game.lanePos + (this.lane - 1)*game.laneGap;
+    this.xpos = game.LANE_POS + (this.lane - 1)*game.LANE_GAP;
+    this.speed = speed;
     this.ypos = 20;
-    this.speed = 3;
   }
   
   
